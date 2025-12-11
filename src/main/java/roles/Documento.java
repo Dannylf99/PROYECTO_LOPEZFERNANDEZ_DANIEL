@@ -2,6 +2,8 @@ package roles;
 
 import java.sql.Date;
 
+import enums.Estado;
+
 public class Documento {
 private int idDocumento;
 private int idUsuario;

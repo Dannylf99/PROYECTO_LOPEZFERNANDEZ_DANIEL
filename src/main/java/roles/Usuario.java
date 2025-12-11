@@ -1,14 +1,5 @@
 package roles;
 
-public abstract class Usuario {
-private int idUsuario;
-private String nombre;
-private String apellidos;
-private String email;
-private String contraseña;
-
-public abstract void iniciarSesion();
-public abstract void cerrarSesion();
 
 public Usuario(int idUsuario, String nombre, String apellidos, String email, String contraseña) {
 	super();

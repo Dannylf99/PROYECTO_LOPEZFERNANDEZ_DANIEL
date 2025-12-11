@@ -1,22 +1,12 @@
-package roles;
+package entities;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.Id;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
 import java.time.LocalDate;
 
-@Entity
-public class Notificacion {
+public abstract class Notificacion {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private int idNotificacion;
-
     private String mensaje;
-
     private LocalDate fecha;
-
     private boolean leida;
 
     public Notificacion() {}
@@ -65,5 +55,6 @@ public class Notificacion {
     public void marcarComoLeida() {
         this.leida = true;
     }
-}
 
+    public abstract void notificarUsuario();
+}
