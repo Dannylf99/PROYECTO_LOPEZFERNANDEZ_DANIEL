@@ -15,16 +15,16 @@ public abstract class Usuario {
     private String nombre;
     private String apellidos;
     private String email;
-    private String contrasena;
+    private String contrasenya;
 
     public Usuario() {}
 
-    public Usuario(int idUsuario, String nombre, String apellidos, String email, String contrasena) {
+    public Usuario(int idUsuario, String nombre, String apellidos, String email, String contrasenya) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.apellidos = apellidos;
         this.email = email;
-        this.contrasena = contrasena;
+        this.contrasenya = contrasenya;
     }
 
     public int getIdUsuario() {
@@ -59,15 +59,14 @@ public abstract class Usuario {
         this.email = email;
     }
 
-    public String getContrasena() {
-        return contrasena;
+    public String getContrasenya() {
+        return contrasenya;
     }
 
-    public void setContrasena(String contrasena) {
-        this.contrasena = contrasena;
+    public void setContrasenya(String contrasenya) {
+        this.contrasenya = contrasenya;
     }
 
     public abstract void iniciarSesion();
     public abstract void cerrarSesion();
 }
-
