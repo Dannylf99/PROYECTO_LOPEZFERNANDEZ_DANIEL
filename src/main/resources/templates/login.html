@@ -3,86 +3,63 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Inicio - Alumno | Gestion@</title>
+    <title>Iniciar sesión - Gestion@</title>
     
     <!-- CSS GLOBAL -->
     <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
     
-    <!-- CSS ESPECÍFICO ALUMNO -->
-    <link rel="stylesheet" th:href="@{/css/alumno.css}">
+    <!-- CSS ESPECÍFICO DEL LOGIN -->
+    <link rel="stylesheet" th:href="@{/css/login.css}">
 </head>
 <body>
     <!-- Barra de navegación -->
-    <nav class="navbar-alumno">
+    <nav>
         <div class="logo">Gestion@</div>
-        <div class="nav-menu">
-            <a href="#" class="nav-link">Consulta prácticas</a>
-            <a href="#" class="nav-link">Subir documentación</a>
-            <a href="#" class="nav-link">Registrar horas</a>
-            <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
+        <div class="nav-buttons">
+            <a th:href="@{/web/registro}" class="btn-nav">Registrarse</a>
+            <a th:href="@{/web/login}" class="btn-nav">Iniciar sesión</a>
         </div>
     </nav>
 
-    <!-- Contenido principal -->
-    <div class="container-alumno">
-        <!-- Bienvenida -->
-        <div class="welcome-section">
-            <h1 class="welcome-title">Bienvenido, <span th:text="${usuario.nombre}">NOMBRE</span></h1>
-            <p class="welcome-text">
-                Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae legendos at vix ad putent delectus 
-                delicata usu. Vidit dissentiet eos cu eum brute copiosae hendrerit. Eos erant dolorum an. Per facer affert ut.
+    <!-- Formulario de login -->
+    <div class="login-container">
+        <div class="login-box">
+            <h1>Inicia sesión</h1>
+            
+            <!-- Mensaje de error si el login falla -->
+            <div th:if="${error}" class="alert alert-error">
+                <span th:text="${error}">Usuario o contraseña incorrectos</span>
+            </div>
+            
+            <!-- Formulario con Thymeleaf -->
+            <form th:action="@{/web/login}" method="post">
+                <div class="form-group">
+                    <input type="email" 
+                           id="email" 
+                           name="email" 
+                           placeholder="Email" 
+                           required 
+                           autocomplete="email">
+                </div>
+                
+                <div class="form-group">
+                    <input type="password" 
+                           id="contrasenya" 
+                           name="contrasenya" 
+                           placeholder="Contraseña" 
+                           required 
+                           autocomplete="current-password">
+                </div>
+                
+                <button type="submit" class="btn btn-primary btn-block">
+                    Iniciar sesión
+                </button>
+            </form>
+            
+            <p class="info-text">
+                Si no tienes usuario y contraseña, contacta al<br>
+                centro para que te proporcione las claves.
             </p>
-            <div class="notifications-box">
-                <p>Tienes <strong>x notificaciones</strong>. Pulsa <a href="#" class="link-notif">aquí</a> para acceder a ellas.</p>
-            </div>
-        </div>
-
-        <!-- Tarjetas de acciones -->
-        <div class="actions-grid">
-            <!-- Tarjeta 1: Consulta prácticas -->
-            <div class="action-card">
-                <div class="card-icon">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <circle cx="12" cy="12" r="10"></circle>
-                        <path d="M12 6v6l4 2"></path>
-                    </svg>
-                </div>
-                <h3 class="card-title">Consulta tus prácticas</h3>
-                <p class="card-description">
-                    Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae.
-                </p>
-                <a href="#" class="card-button">Ver prácticas →</a>
-            </div>
-
-            <!-- Tarjeta 2: Subir documentación -->
-            <div class="action-card">
-                <div class="card-icon">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="17 8 12 3 7 8"></polyline>
-                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                    </svg>
-                </div>
-                <h3 class="card-title">Subir documentación</h3>
-                <p class="card-description">
-                    Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae.
-                </p>
-                <a href="#" class="card-button">Subir documentos →</a>
-            </div>
-
-            <!-- Tarjeta 3: Registrar horas -->
-            <div class="action-card">
-                <div class="card-icon">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                    </svg>
-                </div>
-                <h3 class="card-title">Registrar horas</h3>
-                <p class="card-description">
-                    Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae.
-                </p>
-                <a href="#" class="card-button">Registrar →</a>
-            </div>
         </div>
     </div>
 </body>
