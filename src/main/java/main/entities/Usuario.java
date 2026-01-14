@@ -1,6 +1,7 @@
 package main.entities;
 
 import jakarta.persistence.MappedSuperclass;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -59,9 +60,11 @@ public abstract class Usuario {
         this.email = email;
     }
 
+    @JsonIgnore
     public String getContrasenya() {
         return contrasenya;
     }
+
 
     public void setContrasenya(String contrasenya) {
         this.contrasenya = contrasenya;

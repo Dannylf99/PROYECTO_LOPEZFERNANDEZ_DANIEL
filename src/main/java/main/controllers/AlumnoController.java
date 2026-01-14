@@ -21,7 +21,7 @@ public class AlumnoController {
     public String login(@RequestParam String email, @RequestParam String contrasenya) {
         AlumnoRol alumno = alumnoService.login(email, contrasenya);
         if (alumno == null) return "Credenciales incorrectas";
-        return "Login exitoso: Alumno";
+        return "Login exitoso: " + alumno.getNombre();
     }
 
     @GetMapping
