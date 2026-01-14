@@ -1,0 +1,227 @@
+/* ===================================
+   VARIABLES GLOBALES
+   =================================== */
+:root {
+    --color-primario: #20b2aa;
+    --color-nav: #7dd3c0;
+    --color-hover: #1a9b94;
+    --color-fondo: #f5f5f5;
+    --color-texto: #333;
+    --color-gris: #999;
+    --color-error: #dc3545;
+    --color-exito: #28a745;
+}
+
+/* ===================================
+   RESET Y ESTILOS BASE
+   =================================== */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    line-height: 1.6;
+    min-height: 100vh;
+}
+
+/* ===================================
+   NAVBAR (se usa en TODAS las páginas)
+   =================================== */
+nav {
+    background-color: var(--color-nav);
+    padding: 20px 40px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.logo {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--color-texto);
+    text-decoration: none;
+}
+
+.nav-buttons {
+    display: flex;
+    gap: 15px;
+}
+
+.btn-nav {
+    background-color: var(--color-primario);
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+}
+
+.btn-nav:hover {
+    background-color: var(--color-hover);
+}
+
+/* ===================================
+   BOTONES GLOBALES
+   =================================== */
+.btn {
+    background-color: var(--color-primario);
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 16px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+    text-decoration: none;
+    display: inline-block;
+    text-align: center;
+}
+
+.btn:hover {
+    background-color: var(--color-hover);
+}
+
+.btn-primary {
+    background-color: var(--color-primario);
+}
+
+.btn-primary:hover {
+    background-color: var(--color-hover);
+}
+
+.btn-block {
+    width: 100%;
+    display: block;
+    padding: 15px;
+    font-size: 18px;
+    font-weight: 600;
+    margin-top: 20px;
+}
+
+/* ===================================
+   FORMULARIOS GLOBALES
+   =================================== */
+.form-group {
+    margin-bottom: 25px;
+}
+
+input[type="text"],
+input[type="email"],
+input[type="password"],
+input[type="date"],
+input[type="number"],
+select,
+textarea {
+    width: 100%;
+    padding: 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 16px;
+    font-family: inherit;
+    transition: border-color 0.3s ease;
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+    outline: none;
+    border-color: var(--color-primario);
+}
+
+input::placeholder,
+textarea::placeholder {
+    color: #aaa;
+}
+
+label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 600;
+    color: var(--color-texto);
+}
+
+/* ===================================
+   ALERTAS
+   =================================== */
+.alert {
+    padding: 15px;
+    border-radius: 8px;
+    margin-bottom: 20px;
+    font-size: 14px;
+}
+
+.alert-error {
+    background-color: #f8d7da;
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
+}
+
+.alert-success {
+    background-color: #d4edda;
+    color: var(--color-exito);
+    border: 1px solid var(--color-exito);
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffc107;
+}
+
+/* ===================================
+   CONTENEDORES GLOBALES
+   =================================== */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+.card {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+}
+
+/* ===================================
+   RESPONSIVE
+   =================================== */
+@media (max-width: 768px) {
+    nav {
+        padding: 15px 20px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .logo {
+        font-size: 24px;
+    }
+
+    .nav-buttons {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .btn-nav {
+        width: 100%;
+        text-align: center;
+        padding: 10px 20px;
+        font-size: 14px;
+    }
+
+    .container {
+        padding: 15px;
+    }
+}
