@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inicio - Coordinador | Gestion@</title>
+
+    <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
+    <link rel="stylesheet" th:href="@{/css/coordinador.css}">
+</head>
+
+<body class="role-coordinador">
+
+<nav class="navbar-coordinador">
+    <div class="logo">Gestion@</div>
+
+    <div class="nav-menu">
+        <a href="#" class="nav-link">Alumnos</a>
+        <a href="#" class="nav-link">Seguimiento</a>
+        <a href="#" class="nav-link">Evaluaciones</a>
+        <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
+    </div>
+</nav>
+
+<div class="container-coordinador">
+
+    <div class="welcome-section">
+        <h1 class="welcome-title">
+            Bienvenido, <span th:text="${usuario.nombre}">NOMBRE</span>
+        </h1>
+
+        <p class="welcome-text">
+            Panel del coordinador para la gestión y seguimiento de alumnos en prácticas.
+        </p>
+    </div>
+
+    <div class="actions-grid">
+
+        <div class="action-card">
+            <div class="card-icon">👨‍🎓</div>
+            <h3 class="card-title">Gestión de alumnos</h3>
+            <p class="card-description">Consultar y gestionar alumnos asignados.</p>
+            <a href="#" class="card-button">Acceder</a>
+        </div>
+
+        <div class="action-card">
+            <div class="card-icon">📊</div>
+            <h3 class="card-title">Seguimiento</h3>
+            <p class="card-description">Control del progreso de prácticas.</p>
+            <a href="#" class="card-button">Ver</a>
+        </div>
+
+        <div class="action-card">
+            <div class="card-icon">📝</div>
+            <h3 class="card-title">Evaluaciones</h3>
+            <p class="card-description">Evaluar desempeño de alumnos.</p>
+            <a href="#" class="card-button">Evaluar</a>
+        </div>
+
+    </div>
+</div>
+
+</body>
+</html>

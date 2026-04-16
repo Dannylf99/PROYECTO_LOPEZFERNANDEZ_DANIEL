@@ -1,26 +1,26 @@
 /* ===================================
-   VARIABLES ESPECÍFICAS DEL ALUMNO
+   VARIABLES ESPECÍFICAS DEL COORDINADOR
    =================================== */
 :root {
-    --color-alumno-primario: #ff8c42;
-    --color-alumno-hover: #ff6b1a;
-    --color-alumno-claro: #fff4ec;
-    --color-alumno-oscuro: #e67329;
+    --color-coordinador-primario: #2ecc71;
+    --color-coordinador-hover: #27ae60;
+    --color-coordinador-claro: #e8f8f5;
+    --color-coordinador-oscuro: #229954;
 }
 
 /* ===================================
-   NAVBAR DEL ALUMNO
+   NAVBAR DEL COORDINADOR (VERDE)
    =================================== */
-.navbar-alumno {
-    background: linear-gradient(135deg, #ff8c42 0%, #ffb366 100%);
+.navbar-coordinador {
+    background: linear-gradient(135deg, #2ecc71 0%, #58d68d 100%);
     padding: 20px 40px;
     display: flex;
     justify-content: space-between;
     align-items: center;
-    box-shadow: 0 4px 15px rgba(255, 140, 66, 0.3);
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
 }
 
-.navbar-alumno .logo {
+.navbar-coordinador .logo {
     font-size: 28px;
     font-weight: bold;
     color: white;
@@ -60,7 +60,7 @@
 
 .btn-logout:hover {
     background-color: white;
-    color: var(--color-alumno-primario);
+    color: var(--color-coordinador-primario);
     transform: translateY(-2px);
     box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
@@ -68,8 +68,8 @@
 /* ===================================
    CONTENEDOR PRINCIPAL
    =================================== */
-.container-alumno {
-    max-width: 1400px; /* Aumentado para el layout de dos columnas */
+.container-coordinador {
+    max-width: 1400px;
     margin: 0 auto;
     padding: 40px 20px;
 }
@@ -98,13 +98,12 @@
    SECCIÓN DE BIENVENIDA
    =================================== */
 .welcome-section {
-    background: linear-gradient(135deg, #ff8c42 0%, #ffb366 100%);
+    background: linear-gradient(135deg, #2ecc71 0%, #58d68d 100%);
     color: white;
     padding: 50px;
     border-radius: 20px;
-    box-shadow: 0 10px 30px rgba(255, 140, 66, 0.3);
-    height: 100%; /* Ocupa toda la altura de la columna */
-    /* Eliminado: margin-bottom: 40px */
+    box-shadow: 0 10px 30px rgba(46, 204, 113, 0.3);
+    height: 100%;
 }
 
 .welcome-title {
@@ -114,7 +113,7 @@
 }
 
 .welcome-title span {
-    color: #fff9e6;
+    color: #e8f8f5;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -154,15 +153,8 @@
 }
 
 /* ===================================
-   GRID DE TARJETAS DE ACCIÓN
+   TARJETAS DE ACCIÓN
    =================================== */
-.actions-grid {
-    display: grid;
-    grid-template-columns: 1fr; /* Una columna dentro de column-right */
-    gap: 25px;
-    /* Eliminado: margin-top: 40px */
-}
-
 .action-card {
     background: white;
     padding: 30px;
@@ -172,26 +164,25 @@
     border: 2px solid transparent;
     display: flex;
     flex-direction: column;
-    align-items: flex-start;
 }
 
 .action-card:hover {
-    transform: translateX(10px); /* Igual que el coordinador */
-    box-shadow: 0 8px 30px rgba(255, 140, 66, 0.25);
-    border-color: var(--color-alumno-primario);
+    transform: translateX(10px);
+    box-shadow: 0 8px 30px rgba(46, 204, 113, 0.25);
+    border-color: var(--color-coordinador-primario);
 }
 
 .card-icon {
     width: 70px;
     height: 70px;
-    background: linear-gradient(135deg, #ff8c42 0%, #ffb366 100%);
+    background: linear-gradient(135deg, #2ecc71 0%, #58d68d 100%);
     border-radius: 15px;
     display: flex;
     align-items: center;
     justify-content: center;
     margin-bottom: 20px;
     color: white;
-    box-shadow: 0 5px 15px rgba(255, 140, 66, 0.3);
+    box-shadow: 0 5px 15px rgba(46, 204, 113, 0.3);
 }
 
 .card-title {
@@ -205,12 +196,12 @@
     font-size: 15px;
     color: #666;
     line-height: 1.6;
-    margin-bottom: 25px;
+    margin-bottom: 20px;
     flex-grow: 1;
 }
 
 .card-button {
-    background: linear-gradient(135deg, #ff8c42 0%, #ffb366 100%);
+    background: linear-gradient(135deg, #2ecc71 0%, #58d68d 100%);
     color: white;
     padding: 12px 30px;
     border-radius: 25px;
@@ -220,39 +211,34 @@
     transition: all 0.3s ease;
     display: inline-block;
     align-self: flex-start;
-    box-shadow: 0 4px 15px rgba(255, 140, 66, 0.3);
+    box-shadow: 0 4px 15px rgba(46, 204, 113, 0.3);
 }
 
 .card-button:hover {
     transform: translateX(5px);
-    box-shadow: 0 6px 20px rgba(255, 140, 66, 0.4);
-    background: linear-gradient(135deg, #ff6b1a 0%, #ff8c42 100%);
+    box-shadow: 0 6px 20px rgba(46, 204, 113, 0.4);
+    background: linear-gradient(135deg, #27ae60 0%, #2ecc71 100%);
 }
 
 /* ===================================
    RESPONSIVE
    =================================== */
 
-/* Tablets (menos de 1024px) */
+/* Tablets y móviles (menos de 1024px) */
 @media (max-width: 1024px) {
     .layout-two-columns {
         grid-template-columns: 1fr;
         gap: 30px;
     }
-
+    
     .welcome-section {
         height: auto;
-    }
-
-    /* Las tarjetas vuelven a su grid automático en columna única */
-    .actions-grid {
-        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     }
 }
 
 /* Móviles */
 @media (max-width: 768px) {
-    .navbar-alumno {
+    .navbar-coordinador {
         flex-direction: column;
         padding: 20px;
         gap: 15px;
@@ -270,7 +256,7 @@
         text-align: center;
     }
 
-    .container-alumno {
+    .container-coordinador {
         padding: 20px 15px;
     }
 
@@ -282,17 +268,12 @@
         font-size: 28px;
     }
 
-    .actions-grid {
-        grid-template-columns: 1fr;
-        gap: 20px;
-    }
-
     .action-card {
         padding: 25px;
     }
-
+    
     .action-card:hover {
-        transform: translateY(-5px); /* En móvil vuelve al efecto vertical */
+        transform: translateY(-5px);
     }
 }
 
@@ -309,7 +290,7 @@
         width: 60px;
         height: 60px;
     }
-
+    
     .welcome-section {
         padding: 25px 20px;
     }
