@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gestión de Usuarios | Gestion@</title>
+
+    <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
+    <link rel="stylesheet" th:href="@{/css/administracion.css}">
+    <link rel="stylesheet" th:href="@{/css/gestion-usuarios.css}">
+</head>
+<body>
+
+<nav class="navbar-administracion">
+    <div class="logo">Gestion@</div>
+    <div class="nav-menu">
+        <a th:href="@{/admin/usuarios}" class="nav-link active">Usuarios</a>
+        <a href="#" class="nav-link">Documentación</a>
+        <a href="#" class="nav-link">Informes</a>
+        <a href="#" class="nav-link">Alumnos</a>
+        <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
+    </div>
+</nav>
+
+<div class="container-administracion">
+
+    <!-- Cabecera -->
+    <div class="page-header">
+        <div>
+            <h1 class="page-title">Gestión de Usuarios</h1>
+            <p class="page-subtitle">Lista de todos los usuarios registrados en el sistema</p>
+        </div>
+        <a th:href="@{/admin/usuarios/nuevo}" class="btn-nuevo-usuario">
+            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <line x1="12" y1="5" x2="12" y2="19"></line>
+                <line x1="5" y1="12" x2="19" y2="12"></line>
+            </svg>
+            Nuevo usuario
+        </a>
+    </div>
+
+    <!-- Alertas -->
+    <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
+    <div th:if="${mensajeError}" class="alert alert-error" th:text="${mensajeError}"></div>
+
+    <!-- Tabla -->
+    <div class="table-wrapper">
+        <table class="users-table">
+            <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>Email</th>
+                <th>Tipo</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="usuario : ${usuarios}">
+                <td th:text="${usuario.id}"></td>
+                <td th:text="${usuario.nombre}"></td>
+                <td th:text="${usuario.apellidos}"></td>
+                <td th:text="${usuario.email}"></td>
+                <td>
+                        <span class="badge"
+                              th:classappend="'badge-' + ${#strings.toLowerCase(usuario.tipo)}"
+                              th:text="${usuario.tipo}">
+                        </span>
+                </td>
+                <td class="actions-cell">
+                    <form th:action="@{/admin/usuarios/eliminar/{id}(id=${usuario.id})}" method="post"
+                          onsubmit="return confirm('¿Seguro que quieres eliminar este usuario?')">
+                        <input type="hidden" name="tipo" th:value="${usuario.tipo}"/>
+                        <button type="submit" class="btn-action btn-delete">Eliminar</button>
+                    </form>
+                </td>
+            </tr>
+            <tr th:if="${#lists.isEmpty(usuarios)}">
+                <td colspan="6" class="empty-table">No hay usuarios registrados</td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>
