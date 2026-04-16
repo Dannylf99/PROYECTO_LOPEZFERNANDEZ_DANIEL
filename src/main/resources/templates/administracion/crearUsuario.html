@@ -8,11 +8,33 @@
     <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
     <link rel="stylesheet" th:href="@{/css/administracion.css}">
     <link rel="stylesheet" th:href="@{/css/gestion-usuarios.css}">
+
+    <style>
+        .password-requirements {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 10px 0 20px 0;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+        .password-requirements ul {
+            margin: 10px 0 0 20px;
+        }
+        .password-requirements li {
+            margin: 5px 0;
+        }
+        .error-message {
+            color: #dc3545;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
 </head>
 <body>
 
 <nav class="navbar-administracion">
-    <div class="logo">Gestion@</div>
+    <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
         <a th:href="@{/admin/usuarios}" class="nav-link active">Usuarios</a>
         <a href="#" class="nav-link">Documentación</a>
@@ -41,9 +63,26 @@
     <!-- Alerta de error -->
     <div th:if="${mensajeError}" class="alert alert-error" th:text="${mensajeError}"></div>
 
+    <!-- Requisitos de contraseña -->
+    <div class="password-requirements">
+        <strong>⚠️ Requisitos de seguridad:</strong>
+        <ul>
+            <li><strong>DNI:</strong> Formato válido (12345678A)</li>
+            <li><strong>Email:</strong> Formato válido (usuario@dominio.com)</li>
+            <li><strong>Contraseña:</strong> Mínimo 8 caracteres, debe incluir:
+                <ul>
+                    <li>Al menos 1 letra mayúscula</li>
+                    <li>Al menos 1 letra minúscula</li>
+                    <li>Al menos 1 número</li>
+                    <li>Al menos 1 carácter especial (@$!%*?&)</li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+
     <!-- Formulario -->
     <div class="form-card">
-        <form th:action="@{/admin/usuarios/crear}" method="post">
+        <form th:action="@{/admin/usuarios/crear}" method="post" id="formUsuario">
 
             <!-- Selector de rol -->
             <div class="form-group">
@@ -55,6 +94,19 @@
                     <option value="GESTOR">Gestor</option>
                     <option value="ADMINISTRACION">Administración</option>
                 </select>
+            </div>
+
+            <!-- DNI -->
+            <div class="form-group">
+                <label class="form-label">DNI *</label>
+                <input type="text"
+                       class="form-input"
+                       name="dni"
+                       placeholder="12345678A"
+                       pattern="^[0-9]{8}[A-Z]$"
+                       title="Formato: 12345678A (8 números y 1 letra mayúscula)"
+                       required>
+                <small style="color: #666;">Formato: 8 números + 1 letra mayúscula (ej: 12345678A)</small>
             </div>
 
             <!-- Campos comunes -->
@@ -72,11 +124,25 @@
             <div class="form-row">
                 <div class="form-group">
                     <label class="form-label">Email *</label>
-                    <input type="email" class="form-input" name="email" placeholder="email@ejemplo.com" required>
+                    <input type="email"
+                           class="form-input"
+                           name="email"
+                           placeholder="email@ejemplo.com"
+                           pattern="^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$"
+                           title="Email válido (usuario@dominio.com)"
+                           required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Contraseña *</label>
-                    <input type="password" class="form-input" name="contrasenya" placeholder="Contraseña" required>
+                    <input type="password"
+                           class="form-input"
+                           name="contrasenya"
+                           id="password"
+                           placeholder="Contraseña segura"
+                           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$"
+                           title="Mínimo 8 caracteres: 1 mayúscula, 1 minúscula, 1 número, 1 especial (@$!%*?&)"
+                           required>
+                    <small style="color: #666;">Mínimo 8 caracteres con mayúscula, minúscula, número y carácter especial</small>
                 </div>
             </div>
 

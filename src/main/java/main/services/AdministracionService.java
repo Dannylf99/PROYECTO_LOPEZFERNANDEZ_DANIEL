@@ -1,7 +1,6 @@
 package main.services;
 
 import org.springframework.stereotype.Service;
-
 import main.repositories.AdministracionRepository;
 import main.roles.AdministracionRol;
 
@@ -18,6 +17,10 @@ public class AdministracionService {
 
     public AdministracionRol login(String email, String contrasenya) {
         return adminRepo.findByEmailAndContrasenya(email, contrasenya).orElse(null);
+    }
+
+    public AdministracionRol findByEmail(String email) {
+        return adminRepo.findByEmail(email).orElse(null);
     }
 
     public List<AdministracionRol> getAllAdministradores() {

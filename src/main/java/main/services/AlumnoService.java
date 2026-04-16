@@ -1,7 +1,6 @@
 package main.services;
 
 import org.springframework.stereotype.Service;
-
 import main.repositories.AlumnoRepository;
 import main.roles.AlumnoRol;
 
@@ -18,6 +17,10 @@ public class AlumnoService {
 
     public AlumnoRol login(String email, String contrasenya) {
         return alumnoRepo.findByEmailAndContrasenya(email, contrasenya).orElse(null);
+    }
+
+    public AlumnoRol findByEmail(String email) {
+        return alumnoRepo.findByEmail(email).orElse(null);
     }
 
     public List<AlumnoRol> getAllAlumnos() {

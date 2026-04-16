@@ -1,7 +1,6 @@
 package main.services;
 
 import org.springframework.stereotype.Service;
-
 import main.repositories.GestorRepository;
 import main.roles.GestorRol;
 
@@ -18,6 +17,10 @@ public class GestorService {
 
     public GestorRol login(String email, String contrasenya) {
         return gestorRepo.findByEmailAndContrasenya(email, contrasenya).orElse(null);
+    }
+
+    public GestorRol findByEmail(String email) {
+        return gestorRepo.findByEmail(email).orElse(null);
     }
 
     public List<GestorRol> getAllGestores() {

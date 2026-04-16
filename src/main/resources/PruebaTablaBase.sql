@@ -20,12 +20,14 @@ CREATE TABLE empresa (
 -- ===================================================
 CREATE TABLE alumno (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    dni VARCHAR(9) NOT NULL UNIQUE,
     nombre VARCHAR(100) NOT NULL,
     apellidos VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    contrasenya VARCHAR(100) NOT NULL,
+    contrasenya VARCHAR(255) NOT NULL,
     empresa_asignada INT,
     tutor_centro INT,
+    activo BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT fk_alumno_empresa FOREIGN KEY (empresa_asignada) REFERENCES empresa(id_empresa) ON DELETE SET NULL
 );
 
@@ -34,10 +36,12 @@ CREATE TABLE alumno (
 -- ===================================================
 CREATE TABLE coordinador (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    dni VARCHAR(9) NOT NULL UNIQUE,
     nombre VARCHAR(100) NOT NULL,
     apellidos VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    contrasenya VARCHAR(100) NOT NULL
+    contrasenya VARCHAR(255) NOT NULL,
+    activo BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 -- ===================================================
@@ -45,11 +49,13 @@ CREATE TABLE coordinador (
 -- ===================================================
 CREATE TABLE gestor (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    dni VARCHAR(9) NOT NULL UNIQUE,
     nombre VARCHAR(100) NOT NULL,
     apellidos VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    contrasenya VARCHAR(100) NOT NULL,
+    contrasenya VARCHAR(255) NOT NULL,
     id_empresa INT,
+    activo BOOLEAN NOT NULL DEFAULT TRUE,
     CONSTRAINT fk_gestor_empresa FOREIGN KEY (id_empresa) REFERENCES empresa(id_empresa) ON DELETE SET NULL
 );
 
@@ -58,10 +64,12 @@ CREATE TABLE gestor (
 -- ===================================================
 CREATE TABLE administracion (
     id_usuario INT AUTO_INCREMENT PRIMARY KEY,
+    dni VARCHAR(9) NOT NULL UNIQUE,
     nombre VARCHAR(100) NOT NULL,
     apellidos VARCHAR(100) NOT NULL,
     email VARCHAR(100) NOT NULL UNIQUE,
-    contrasenya VARCHAR(100) NOT NULL
+    contrasenya VARCHAR(255) NOT NULL,
+    activo BOOLEAN NOT NULL DEFAULT TRUE
 );
 
 -- ===================================================
@@ -102,37 +110,25 @@ CREATE TABLE notificacion (
 );
 
 -- ===================================================
--- DATOS BÁSICOS PARA PROBAR LOGIN
+-- DATOS DE PRUEBA (Contraseñas: Prueba123!)
 -- ===================================================
 
 -- Empresa
 INSERT INTO empresa (nombre, cif, direccion)
 VALUES ('EmpresaX', 'B12345678', 'Calle Falsa 123');
 
--- Alumno
-INSERT INTO alumno (nombre, apellidos, email, contrasenya, empresa_asignada, tutor_centro)
-VALUES ('Juan', 'Pérez', 'alumno@test.com', '1234', 1, NULL);
+-- Alumno (contraseña: Prueba123!)
+INSERT INTO alumno (dni, nombre, apellidos, email, contrasenya, empresa_asignada, tutor_centro, activo)
+VALUES ('12345678A', 'Juan', 'Pérez', 'alumno@test.com', '$2a$10$foK9xsUhmBKl8bPPPY5ZreCWV8XkFmD8pGZIk.hRK9pRrZf8EET36', 1, NULL, TRUE);
 
--- Coordinador
-INSERT INTO coordinador (nombre, apellidos, email, contrasenya)
-VALUES ('Marta', 'García', 'coordinador@test.com', '1234');
+-- Coordinador (contraseña: Prueba123!)
+INSERT INTO coordinador (dni, nombre, apellidos, email, contrasenya, activo)
+VALUES ('23456789B', 'Marta', 'García', 'coordinador@test.com', '$2a$10$foK9xsUhmBKl8bPPPY5ZreCWV8XkFmD8pGZIk.hRK9pRrZf8EET36', TRUE);
 
--- Gestor
-INSERT INTO gestor (nombre, apellidos, email, contrasenya, id_empresa)
-VALUES ('Luis', 'Martín', 'gestor@test.com', '1234', 1);
+-- Gestor (contraseña: Prueba123!)
+INSERT INTO gestor (dni, nombre, apellidos, email, contrasenya, id_empresa, activo)
+VALUES ('34567890C', 'Luis', 'Martín', 'gestor@test.com', '$2a$10$foK9xsUhmBKl8bPPPY5ZreCWV8XkFmD8pGZIk.hRK9pRrZf8EET36', 1, TRUE);
 
--- Administración
-INSERT INTO administracion (nombre, apellidos, email, contrasenya)
-VALUES ('Ana', 'López', 'admin@test.com', '1234');
-
--- Documento
-INSERT INTO documento (id_usuario, tipo, fecha_subida, estado, ruta_archivo)
-VALUES (1, 'Informe', CURDATE(), 'VALIDADO', '/docs/informe1.pdf');
-
--- Práctica
-INSERT INTO practica (id_alumno, id_empresa, fecha_inicio, fecha_fin, horas_totales)
-VALUES (1, 1, CURDATE(), DATE_ADD(CURDATE(), INTERVAL 30 DAY), 120);
-
--- Notificación
-INSERT INTO notificacion (mensaje, fecha, leida)
-VALUES ('Bienvenido al sistema', CURDATE(), FALSE);
+-- Administración (contraseña: Prueba123!)
+INSERT INTO administracion (dni, nombre, apellidos, email, contrasenya, activo)
+VALUES ('45678901D', 'Ana', 'López', 'admin@test.com', '$2a$10$foK9xsUhmBKl8bPPPY5ZreCWV8XkFmD8pGZIk.hRK9pRrZf8EET36', TRUE);

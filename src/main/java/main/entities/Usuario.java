@@ -5,6 +5,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import jakarta.persistence.Id;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
+import jakarta.persistence.Column;
 
 @MappedSuperclass
 public abstract class Usuario {
@@ -15,19 +16,31 @@ public abstract class Usuario {
 
     private String nombre;
     private String apellidos;
+
+    @Column(unique = true, nullable = false)
+    private String dni;
+
+    @Column(unique = true, nullable = false)
     private String email;
+
     private String contrasenya;
+
+    @Column(nullable = false)
+    private boolean activo = true;
 
     public Usuario() {}
 
-    public Usuario(int idUsuario, String nombre, String apellidos, String email, String contrasenya) {
+    public Usuario(int idUsuario, String nombre, String apellidos, String dni, String email, String contrasenya) {
         this.idUsuario = idUsuario;
         this.nombre = nombre;
         this.apellidos = apellidos;
+        this.dni = dni;
         this.email = email;
         this.contrasenya = contrasenya;
+        this.activo = true;
     }
 
+    // Getters y Setters
     public int getIdUsuario() {
         return idUsuario;
     }
@@ -52,6 +65,14 @@ public abstract class Usuario {
         this.apellidos = apellidos;
     }
 
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -65,9 +86,16 @@ public abstract class Usuario {
         return contrasenya;
     }
 
-
     public void setContrasenya(String contrasenya) {
         this.contrasenya = contrasenya;
+    }
+
+    public boolean isActivo() {
+        return activo;
+    }
+
+    public void setActivo(boolean activo) {
+        this.activo = activo;
     }
 
     public abstract void iniciarSesion();

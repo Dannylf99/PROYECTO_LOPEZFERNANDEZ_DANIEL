@@ -8,14 +8,17 @@ import main.entities.Usuario;
 @Table(name = "administracion")
 public class AdministracionRol extends Usuario {
 
+    // Constructor vacío
     public AdministracionRol() {
         super();
     }
 
-    public AdministracionRol(int idUsuario, String nombre, String apellidos, String email, String contrasenya) {
-        super(idUsuario, nombre, apellidos, email, contrasenya);
+    // Constructor completo (ACTUALIZADO con DNI)
+    public AdministracionRol(int idUsuario, String nombre, String apellidos, String dni, String email, String contrasenya) {
+        super(idUsuario, nombre, apellidos, dni, email, contrasenya);
     }
 
+    // Implementación de métodos abstractos
     @Override
     public void iniciarSesion() {
         System.out.println("Administrador " + getNombre() + " ha iniciado sesión");
@@ -24,30 +27,5 @@ public class AdministracionRol extends Usuario {
     @Override
     public void cerrarSesion() {
         System.out.println("Administrador " + getNombre() + " ha cerrado sesión");
-    }
-
-    // Métodos específicos de administración
-    public void gestionarUsuarios() {
-        System.out.println("Gestionando usuarios...");
-    }
-
-    public void invalidarDocumentos() {
-        System.out.println("Invalidando documentos...");
-    }
-
-    public void exportarInforme() {
-        System.out.println("Exportando informe...");
-    }
-
-    public void asignarAlumnosCoordinador() {
-        System.out.println("Asignando alumnos a coordinador...");
-    }
-
-    public void asignarAlumnosEmpresa() {
-        System.out.println("Asignando alumnos a empresa...");
-    }
-
-    public void ejecutarTareaAdministrativa() {
-        System.out.println("Ejecutando tarea administrativa...");
     }
 }

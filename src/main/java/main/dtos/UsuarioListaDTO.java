@@ -5,24 +5,22 @@ public class UsuarioListaDTO {
     private Long id;
     private String nombre;
     private String apellidos;
+    private String dni;
     private String email;
     private String tipo;
 
-    // Constructor vacío (IMPORTANTE)
-    public UsuarioListaDTO() {
-    }
+    public UsuarioListaDTO() {}
 
-    // Constructor con parámetros
-    public UsuarioListaDTO(Long id, String nombre, String apellidos, String email, String tipo) {
+    public UsuarioListaDTO(Long id, String nombre, String apellidos, String dni, String email, String tipo) {
         this.id = id;
         this.nombre = nombre;
         this.apellidos = apellidos;
+        this.dni = dni;
         this.email = email;
         this.tipo = tipo;
     }
 
-    // Getters y setters
-
+    // Getters y Setters
     public Long getId() {
         return id;
     }
@@ -47,6 +45,14 @@ public class UsuarioListaDTO {
         this.apellidos = apellidos;
     }
 
+    public String getDni() {
+        return dni;
+    }
+
+    public void setDni(String dni) {
+        this.dni = dni;
+    }
+
     public String getEmail() {
         return email;
     }
@@ -61,16 +67,5 @@ public class UsuarioListaDTO {
 
     public void setTipo(String tipo) {
         this.tipo = tipo;
-    }
-
-    @Override
-    public String toString() {
-        return "UsuarioListaDTO{" +
-                "id=" + id +
-                ", nombre='" + nombre + '\'' +
-                ", apellidos='" + apellidos + '\'' +
-                ", email='" + email + '\'' +
-                ", tipo='" + tipo + '\'' +
-                '}';
     }
 }

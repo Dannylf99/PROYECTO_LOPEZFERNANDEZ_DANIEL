@@ -11,7 +11,7 @@ public class AlumnoRol extends Usuario {
 
     @Column(name = "empresa_asignada")
     private Integer empresaAsignada;
-    
+
     @Column(name = "tutor_centro")
     private Integer tutorCentro;
 
@@ -20,9 +20,9 @@ public class AlumnoRol extends Usuario {
         super();
     }
 
-    // Constructor con parámetros
-    public AlumnoRol(int idUsuario, String nombre, String apellidos, String email, String contrasenya) {
-        super(idUsuario, nombre, apellidos, email, contrasenya);
+    // Constructor completo (ACTUALIZADO con DNI)
+    public AlumnoRol(int idUsuario, String nombre, String apellidos, String dni, String email, String contrasenya) {
+        super(idUsuario, nombre, apellidos, dni, email, contrasenya);
     }
 
     // Getters y Setters
@@ -51,10 +51,5 @@ public class AlumnoRol extends Usuario {
     @Override
     public void cerrarSesion() {
         System.out.println("Alumno " + getNombre() + " ha cerrado sesión");
-    }
-
-    // Método específico de alumno
-    public void asistirClase() {
-        System.out.println("Alumno asistiendo a clase");
     }
 }

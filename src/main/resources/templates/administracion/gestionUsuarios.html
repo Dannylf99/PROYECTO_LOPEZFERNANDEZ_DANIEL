@@ -8,11 +8,77 @@
     <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
     <link rel="stylesheet" th:href="@{/css/administracion.css}">
     <link rel="stylesheet" th:href="@{/css/gestion-usuarios.css}">
+
+    <style>
+        /* Barra de búsqueda */
+        .search-bar {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 16px;
+            align-items: center;
+        }
+        .search-bar input[type="text"] {
+            flex: 2;
+            min-width: 250px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-bar input[type="text"]:focus {
+            border-color: #666;
+        }
+        .search-bar select {
+            flex: 1;
+            min-width: 160px;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 14px;
+            outline: none;
+            transition: border-color 0.2s;
+        }
+        .search-bar select:focus {
+            border-color: #666;
+        }
+        .search-bar button {
+            padding: 8px 18px;
+            border: none;
+            border-radius: 6px;
+            background-color: #333;
+            color: #fff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: background-color 0.2s;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        .search-bar button:hover {
+            background-color: #555;
+        }
+
+        /* Cabeceras ordenables */
+        th.sortable {
+            cursor: pointer;
+            user-select: none;
+            white-space: nowrap;
+        }
+        th.sortable:hover {
+            background-color: rgba(0,0,0,0.05);
+        }
+        th.sortable .sort-icon::after { content: ' ⇅'; opacity: 0.4; font-size: 11px; }
+        th.sortable.asc .sort-icon::after  { content: ' ▲'; opacity: 1; font-size: 11px; }
+        th.sortable.desc .sort-icon::after { content: ' ▼'; opacity: 1; font-size: 11px; }
+
+        .empty-table { text-align: center; color: #888; padding: 24px; }
+    </style>
 </head>
 <body>
 
 <nav class="navbar-administracion">
-    <div class="logo">Gestion@</div>
+    <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
         <a th:href="@{/admin/usuarios}" class="nav-link active">Usuarios</a>
         <a href="#" class="nav-link">Documentación</a>
@@ -43,34 +109,58 @@
     <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
     <div th:if="${mensajeError}" class="alert alert-error" th:text="${mensajeError}"></div>
 
+    <!-- Barra de búsqueda -->
+    <div class="search-bar">
+        <input type="text" id="searchInput" placeholder="Buscar..." onkeydown="if(event.key==='Enter') filtrarTabla()">
+        <select id="searchField">
+            <option value="all">Todos los campos</option>
+            <option value="0">DNI</option>
+            <option value="1">Nombre</option>
+            <option value="2">Apellidos</option>
+            <option value="3">Email</option>
+            <option value="4">Tipo</option>
+        </select>
+        <button onclick="filtrarTabla()">Buscar</button>
+    </div>
+
+    <!-- Contador de resultados -->
+    <p id="contadorResultados" style="margin-top: -8px; margin-bottom: 10px; font-size: 13px; color: #888;"></p>
+
     <!-- Tabla -->
     <div class="table-wrapper">
-        <table class="users-table">
+        <table class="users-table" id="usuariosTable">
             <thead>
             <tr>
-                <th>ID</th>
-                <th>Nombre</th>
-                <th>Apellidos</th>
-                <th>Email</th>
-                <th>Tipo</th>
+                <th class="sortable" onclick="ordenarTabla(0)">DNI<span class="sort-icon"></span></th>
+                <th class="sortable" onclick="ordenarTabla(1)">Nombre<span class="sort-icon"></span></th>
+                <th class="sortable" onclick="ordenarTabla(2)">Apellidos<span class="sort-icon"></span></th>
+                <th class="sortable" onclick="ordenarTabla(3)">Email<span class="sort-icon"></span></th>
+                <th class="sortable" onclick="ordenarTabla(4)">Tipo<span class="sort-icon"></span></th>
                 <th>Acciones</th>
             </tr>
             </thead>
-            <tbody>
+            <tbody id="usuariosBody">
             <tr th:each="usuario : ${usuarios}">
-                <td th:text="${usuario.id}"></td>
+                <td th:text="${usuario.dni}"></td>
                 <td th:text="${usuario.nombre}"></td>
                 <td th:text="${usuario.apellidos}"></td>
                 <td th:text="${usuario.email}"></td>
                 <td>
-                        <span class="badge"
-                              th:classappend="'badge-' + ${#strings.toLowerCase(usuario.tipo)}"
-                              th:text="${usuario.tipo}">
-                        </span>
+                    <span class="badge"
+                          th:classappend="'badge-' + ${#strings.toLowerCase(usuario.tipo)}"
+                          th:text="${usuario.tipo}">
+                    </span>
                 </td>
                 <td class="actions-cell">
-                    <form th:action="@{/admin/usuarios/eliminar/{id}(id=${usuario.id})}" method="post"
-                          onsubmit="return confirm('¿Seguro que quieres eliminar este usuario?')">
+                    <!-- El id sigue oculto para las acciones -->
+                    <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id}, tipo=${usuario.tipo})}"
+                       class="btn-action btn-edit">
+                        Editar
+                    </a>
+                    <form th:action="@{/admin/usuarios/eliminar/{id}(id=${usuario.id})}"
+                          method="post"
+                          style="display:inline;"
+                          onsubmit="return confirm('¿Seguro que quieres dar de baja a este usuario?')">
                         <input type="hidden" name="tipo" th:value="${usuario.tipo}"/>
                         <button type="submit" class="btn-action btn-delete">Eliminar</button>
                     </form>
@@ -84,5 +174,63 @@
     </div>
 
 </div>
+
+<script>
+    let sortCol = -1;
+    let sortAsc = true;
+
+    function filtrarTabla() {
+        const query = document.getElementById('searchInput').value.toLowerCase().trim();
+        const campo = document.getElementById('searchField').value;
+        const filas = Array.from(document.querySelectorAll('#usuariosBody tr'));
+        let visibles = 0;
+
+        filas.forEach(fila => {
+            const celdas = fila.querySelectorAll('td');
+            if (celdas.length <= 1) { fila.style.display = ''; return; }
+
+            let texto;
+            if (campo === 'all') {
+                texto = Array.from(celdas).slice(0, 5).map(c => c.innerText).join(' ').toLowerCase();
+            } else {
+                texto = (celdas[parseInt(campo)]?.innerText || '').toLowerCase();
+            }
+
+            const visible = texto.includes(query);
+            fila.style.display = visible ? '' : 'none';
+            if (visible) visibles++;
+        });
+
+        const total = filas.filter(f => f.querySelectorAll('td').length > 1).length;
+        const contador = document.getElementById('contadorResultados');
+        contador.textContent = query ? `Mostrando ${visibles} de ${total} usuarios` : '';
+    }
+
+    function ordenarTabla(col) {
+        const headers = document.querySelectorAll('th.sortable');
+        headers.forEach(h => h.classList.remove('asc', 'desc'));
+
+        if (sortCol === col) {
+            sortAsc = !sortAsc;
+        } else {
+            sortCol = col;
+            sortAsc = true;
+        }
+
+        headers[col].classList.add(sortAsc ? 'asc' : 'desc');
+
+        const tbody = document.getElementById('usuariosBody');
+        const filas = Array.from(tbody.querySelectorAll('tr')).filter(f => f.querySelectorAll('td').length > 1);
+
+        filas.sort((a, b) => {
+            const celdaA = a.querySelectorAll('td')[col]?.innerText.trim() || '';
+            const celdaB = b.querySelectorAll('td')[col]?.innerText.trim() || '';
+            return sortAsc ? celdaA.localeCompare(celdaB, 'es') : celdaB.localeCompare(celdaA, 'es');
+        });
+
+        filas.forEach(f => tbody.appendChild(f));
+    }
+</script>
+
 </body>
 </html>

@@ -48,55 +48,68 @@ nav {
     text-decoration: none;
 }
 
+.logo-img {
+    height: 40px !important;
+    width: auto !important;
+}
+
 .nav-buttons {
     display: flex;
     gap: 15px;
 }
 
 .btn-nav {
-    background-color: var(--color-primario);
+    background: linear-gradient(135deg, var(--color-primario) 0%, #3fcfc7 100%);
     color: white;
-    padding: 12px 30px;
+    padding: 10px 25px;
     border: none;
-    border-radius: 8px;
-    font-size: 16px;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
+    box-shadow: 0 4px 15px rgba(32, 178, 170, 0.3);
 }
 
 .btn-nav:hover {
-    background-color: var(--color-hover);
+    background: linear-gradient(135deg, var(--color-hover) 0%, var(--color-primario) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(32, 178, 170, 0.4);
 }
 
 /* ===================================
    BOTONES GLOBALES
    =================================== */
 .btn {
-    background-color: var(--color-primario);
+    background: linear-gradient(135deg, var(--color-primario) 0%, #3fcfc7 100%);
     color: white;
     padding: 12px 30px;
     border: none;
-    border-radius: 8px;
+    border-radius: 25px;
     font-size: 16px;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: all 0.3s ease;
     text-decoration: none;
     display: inline-block;
     text-align: center;
+    box-shadow: 0 4px 15px rgba(32, 178, 170, 0.3);
 }
 
 .btn:hover {
-    background-color: var(--color-hover);
+    background: linear-gradient(135deg, var(--color-hover) 0%, var(--color-primario) 100%);
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(32, 178, 170, 0.4);
 }
 
 .btn-primary {
-    background-color: var(--color-primario);
+    background: linear-gradient(135deg, var(--color-primario) 0%, #3fcfc7 100%);
 }
 
 .btn-primary:hover {
-    background-color: var(--color-hover);
+    background: linear-gradient(135deg, var(--color-hover) 0%, var(--color-primario) 100%);
 }
 
 .btn-block {

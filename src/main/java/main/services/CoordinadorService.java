@@ -1,7 +1,6 @@
 package main.services;
 
 import org.springframework.stereotype.Service;
-
 import main.repositories.CoordinadorRepository;
 import main.roles.CoordinadorRol;
 
@@ -18,6 +17,10 @@ public class CoordinadorService {
 
     public CoordinadorRol login(String email, String contrasenya) {
         return coordinadorRepo.findByEmailAndContrasenya(email, contrasenya).orElse(null);
+    }
+
+    public CoordinadorRol findByEmail(String email) {
+        return coordinadorRepo.findByEmail(email).orElse(null);
     }
 
     public List<CoordinadorRol> getAllCoordinadores() {
