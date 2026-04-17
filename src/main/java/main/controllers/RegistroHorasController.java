@@ -24,7 +24,6 @@ public class RegistroHorasController {
     @Autowired private PracticaRepository practicaRepository;
     @Autowired private NotificacionService notificacionService;
 
-    // ── GET: formulario de registro de horas (alumno) ───
     @GetMapping("/web/alumno/horas")
     public String mostrarFormulario(HttpSession session, Model model, HttpServletResponse response) {
         Object usuario = session.getAttribute("usuario");
@@ -32,30 +31,37 @@ public class RegistroHorasController {
         noCache(response);
         AlumnoRol alumno = (AlumnoRol) usuario;
 
-        List<PracticaRol> practicas = practicaService.getPracticasByAlumno(alumno).stream()
+        List<PracticaRol> todasPracticas = practicaService.getPracticasByAlumno(alumno);
+
+        // Verificar si alguna práctica está parada
+        boolean practicaParada = todasPracticas.stream()
+                .anyMatch(p -> p.getEstado() == PracticaRol.Estado.PARADA);
+
+        List<PracticaRol> practicasActivas = todasPracticas.stream()
                 .filter(p -> p.getEstado() == PracticaRol.Estado.ACTIVA)
                 .toList();
 
-        // Cargar todos los registros de las prácticas del alumno para el historial
         List<RegistroHorasRol> registros = new ArrayList<>();
-        for (PracticaRol p : practicaService.getPracticasByAlumno(alumno)) {
+        for (PracticaRol p : todasPracticas) {
             registros.addAll(registroService.getByPractica(p));
         }
-        // Ordenar por fecha descendente
         registros.sort((a, b) -> b.getFecha().compareTo(a.getFecha()));
 
         model.addAttribute("usuario", alumno);
-        model.addAttribute("practicas", practicas);
+        model.addAttribute("practicas", practicasActivas);
+        model.addAttribute("practicaParada", practicaParada);
         model.addAttribute("registros", registros);
+        model.addAttribute("notificacionesNoLeidas", notificacionService.countNoLeidas(alumno));
         return "alumno/registrarHoras";
     }
 
-    // ── POST: guardar registro de horas (alumno) ────────
     @PostMapping("/web/alumno/horas/registrar")
     public String registrar(@RequestParam int idPractica,
                             @RequestParam String fecha,
                             @RequestParam String horaInicio,
                             @RequestParam String horaFin,
+                            @RequestParam(required = false) String pausaInicio,
+                            @RequestParam(required = false) String pausaFin,
                             HttpSession session,
                             RedirectAttributes redirectAttributes) {
         Object usuario = session.getAttribute("usuario");
@@ -63,10 +69,18 @@ public class RegistroHorasController {
 
         try {
             PracticaRol practica = practicaRepository.findById(idPractica).orElseThrow();
-            registroService.registrar(practica,
-                    LocalDate.parse(fecha),
-                    LocalTime.parse(horaInicio),
-                    LocalTime.parse(horaFin));
+
+            if (practica.getEstado() == PracticaRol.Estado.PARADA) {
+                redirectAttributes.addFlashAttribute("mensajeError",
+                        "No puedes registrar horas con una práctica parada.");
+                return "redirect:/web/alumno/horas";
+            }
+
+            LocalTime pInicio = (pausaInicio != null && !pausaInicio.isBlank()) ? LocalTime.parse(pausaInicio) : null;
+            LocalTime pFin    = (pausaFin    != null && !pausaFin.isBlank())    ? LocalTime.parse(pausaFin)    : null;
+
+            registroService.registrar(practica, LocalDate.parse(fecha),
+                    LocalTime.parse(horaInicio), LocalTime.parse(horaFin), pInicio, pFin);
             redirectAttributes.addFlashAttribute("mensajeExito",
                     "Horas registradas correctamente. Pendientes de validación.");
         } catch (Exception e) {
@@ -76,7 +90,6 @@ public class RegistroHorasController {
         return "redirect:/web/alumno/horas";
     }
 
-    // ── GET: validar horas (gestor) ─────────────────────
     @GetMapping("/web/gestor/validarHoras")
     public String validarHorasGestor(HttpSession session, Model model, HttpServletResponse response) {
         Object usuario = session.getAttribute("usuario");
@@ -87,14 +100,12 @@ public class RegistroHorasController {
         List<PracticaRol> practicas = practicaRepository.findAll().stream()
                 .filter(p -> p.getEmpresa().getIdEmpresa() == gestor.getIdEmpresa())
                 .toList();
-        List<RegistroHorasRol> pendientes = registroService.getPendientesByPracticas(practicas);
 
         model.addAttribute("usuario", gestor);
-        model.addAttribute("pendientes", pendientes);
+        model.addAttribute("pendientes", registroService.getPendientesByPracticas(practicas));
         return "gestor/validarHoras";
     }
 
-    // ── GET: validar horas (coordinador) ────────────────
     @GetMapping("/web/coordinador/validarHoras")
     public String validarHorasCoordinador(HttpSession session, Model model, HttpServletResponse response) {
         Object usuario = session.getAttribute("usuario");
@@ -105,19 +116,15 @@ public class RegistroHorasController {
         List<PracticaRol> practicas = practicaRepository.findAll().stream()
                 .filter(p -> p.getCoordinador().getIdUsuario() == coordinador.getIdUsuario())
                 .toList();
-        List<RegistroHorasRol> pendientes = registroService.getPendientesByPracticas(practicas);
 
         model.addAttribute("usuario", coordinador);
-        model.addAttribute("pendientes", pendientes);
+        model.addAttribute("pendientes", registroService.getPendientesByPracticas(practicas));
         return "coordinador/validarHoras";
     }
 
-    // ── POST: validar un registro ───────────────────────
     @PostMapping("/web/horas/validar/{id}")
-    public String validar(@PathVariable int id,
-                          @RequestParam String origen,
-                          HttpSession session,
-                          RedirectAttributes redirectAttributes) {
+    public String validar(@PathVariable int id, @RequestParam String origen,
+                          HttpSession session, RedirectAttributes redirectAttributes) {
         Object usuario = session.getAttribute("usuario");
         if (!(usuario instanceof GestorRol) && !(usuario instanceof CoordinadorRol))
             return "redirect:/web/login";
@@ -130,12 +137,9 @@ public class RegistroHorasController {
         return "redirect:/web/" + origen + "/validarHoras";
     }
 
-    // ── POST: rechazar un registro ──────────────────────
     @PostMapping("/web/horas/rechazar/{id}")
-    public String rechazar(@PathVariable int id,
-                           @RequestParam String origen,
-                           HttpSession session,
-                           RedirectAttributes redirectAttributes) {
+    public String rechazar(@PathVariable int id, @RequestParam String origen,
+                           HttpSession session, RedirectAttributes redirectAttributes) {
         Object usuario = session.getAttribute("usuario");
         if (!(usuario instanceof GestorRol) && !(usuario instanceof CoordinadorRol))
             return "redirect:/web/login";

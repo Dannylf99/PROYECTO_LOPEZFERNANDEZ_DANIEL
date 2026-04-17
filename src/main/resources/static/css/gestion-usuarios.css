@@ -308,3 +308,15 @@
         font-size: 13px;
     }
 }
+
+/* ===================================
+   TABLAS RESPONSIVE — SCROLL HORIZONTAL
+   =================================== */
+.table-wrapper {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.users-table {
+    min-width: 600px; /* fuerza scroll antes de comprimir */
+}

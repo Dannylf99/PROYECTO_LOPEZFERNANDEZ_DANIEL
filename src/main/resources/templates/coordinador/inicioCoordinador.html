@@ -28,8 +28,11 @@
                 <p class="welcome-text">
                     Panel del coordinador para la gestión y seguimiento de alumnos en prácticas.
                 </p>
-                <div class="notifications-box">
-                    <p>Tienes <strong>x notificaciones</strong>. Pulsa <a href="#" class="link-notif">aquí</a> para acceder a ellas.</p>
+                <div class="notifications-box" th:if="${notificacionesNoLeidas > 0}">
+                    <p>
+                        Tienes <strong th:text="${notificacionesNoLeidas} + ' notificaciones nuevas'"></strong>.
+                        Pulsa <a th:href="@{/web/alumno/notificaciones}" class="link-notif">aquí</a> para verlas.
+                    </p>
                 </div>
             </div>
         </div>

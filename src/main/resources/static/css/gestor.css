@@ -8,6 +8,8 @@
     --color-gestor-oscuro: #a93226;
 }
 
+body::before { background-color: #e74c3c; }
+
 /* ===================================
    NAVBAR DEL GESTOR (ROJO)
    =================================== */

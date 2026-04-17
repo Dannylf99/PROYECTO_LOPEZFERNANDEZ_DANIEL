@@ -8,6 +8,8 @@
     --color-admin-oscuro: #2874a6;
 }
 
+body::before { background-color: #3498db; }
+
 /* ===================================
    NAVBAR DE ADMINISTRACIÓN (AZUL)
    =================================== */

@@ -8,6 +8,9 @@
     --color-alumno-oscuro: #e67329;
 }
 
+body { --tinte-fondo: rgba(255, 140, 66, 0.07); }
+body::before { background-color: #ff8c42; }
+
 /* ===================================
    NAVBAR DEL ALUMNO
    =================================== */

@@ -21,14 +21,15 @@ public class AdminPracticasController {
     @Autowired private GestorRepository gestorRepository;
     @Autowired private EmpresaRepository empresaRepository;
 
-    // ── GET: listado ────────────────────────────────────
     @GetMapping
     public String listarPracticas(Model model) {
-        model.addAttribute("practicas", practicaService.getAllPracticas());
+        // Mostrar todas excepto CANCELADAS
+        model.addAttribute("practicas", practicaService.getAllPracticas().stream()
+                .filter(p -> p.getEstado() != PracticaRol.Estado.CANCELADA)
+                .toList());
         return "administracion/gestionPracticas";
     }
 
-    // ── GET: formulario de creación ─────────────────────
     @GetMapping("/nueva")
     public String mostrarFormulario(Model model) {
         model.addAttribute("alumnos", alumnoRepository.findByActivoTrue());
@@ -38,7 +39,6 @@ public class AdminPracticasController {
         return "administracion/crearPractica";
     }
 
-    // ── POST: guardar nueva práctica ────────────────────
     @PostMapping("/crear")
     public String crearPractica(@RequestParam int idAlumno,
                                 @RequestParam int idCoordinador,
@@ -49,14 +49,12 @@ public class AdminPracticasController {
                                 RedirectAttributes redirectAttributes) {
         try {
             AlumnoRol alumno = alumnoRepository.findById(idAlumno).orElseThrow();
-
             if (practicaService.tienesPracticaEnCurso(alumno)) {
                 redirectAttributes.addFlashAttribute("mensajeError",
                         "El alumno " + alumno.getNombre() + " " + alumno.getApellidos() +
                                 " ya tiene una práctica activa o preparada.");
                 return "redirect:/admin/practicas/nueva";
             }
-
             CoordinadorRol coordinador = coordinadorRepository.findById(idCoordinador).orElseThrow();
             EmpresaRol empresa = empresaRepository.findById(idEmpresa).orElseThrow();
 
@@ -79,7 +77,6 @@ public class AdminPracticasController {
         return "redirect:/admin/practicas";
     }
 
-    // ── GET: formulario de edición ──────────────────────
     @GetMapping("/editar/{id}")
     public String mostrarFormularioEdicion(@PathVariable int id, Model model,
                                            RedirectAttributes redirectAttributes) {
@@ -90,7 +87,10 @@ public class AdminPracticasController {
             model.addAttribute("alumnos", alumnoRepository.findByActivoTrue());
             model.addAttribute("coordinadores", coordinadorRepository.findByActivoTrue());
             model.addAttribute("empresas", empresaRepository.findAll());
-            model.addAttribute("estados", PracticaRol.Estado.values());
+            model.addAttribute("estados", new PracticaRol.Estado[]{
+                    PracticaRol.Estado.PREPARADA, PracticaRol.Estado.ACTIVA,
+                    PracticaRol.Estado.PARADA, PracticaRol.Estado.FINALIZADA
+            });
             return "administracion/editarPractica";
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeError", "Práctica no encontrada.");
@@ -98,7 +98,6 @@ public class AdminPracticasController {
         }
     }
 
-    // ── POST: actualizar práctica ───────────────────────
     @PostMapping("/actualizar/{id}")
     public String actualizarPractica(@PathVariable int id,
                                      @RequestParam int idAlumno,
@@ -114,21 +113,16 @@ public class AdminPracticasController {
                     .filter(p -> p.getIdPractica() == id).findFirst().orElseThrow();
 
             AlumnoRol alumno = alumnoRepository.findById(idAlumno).orElseThrow();
-            CoordinadorRol coordinador = coordinadorRepository.findById(idCoordinador).orElseThrow();
-            EmpresaRol empresa = empresaRepository.findById(idEmpresa).orElseThrow();
-
-            // Si cambia el alumno, verificar que el nuevo no tenga ya práctica en curso
             if (practica.getAlumno().getIdUsuario() != idAlumno
                     && practicaService.tienesPracticaEnCurso(alumno)) {
                 redirectAttributes.addFlashAttribute("mensajeError",
-                        "El alumno " + alumno.getNombre() + " " + alumno.getApellidos() +
-                                " ya tiene una práctica activa o preparada.");
+                        "El alumno ya tiene una práctica activa o preparada.");
                 return "redirect:/admin/practicas/editar/" + id;
             }
 
             practica.setAlumno(alumno);
-            practica.setCoordinador(coordinador);
-            practica.setEmpresa(empresa);
+            practica.setCoordinador(coordinadorRepository.findById(idCoordinador).orElseThrow());
+            practica.setEmpresa(empresaRepository.findById(idEmpresa).orElseThrow());
             practica.setFechaInicio(Date.valueOf(fechaInicio));
             practica.setFechaFin(Date.valueOf(fechaFin));
             practica.setHorasTotales(horasTotales);
@@ -138,6 +132,40 @@ public class AdminPracticasController {
             redirectAttributes.addFlashAttribute("mensajeExito", "Práctica actualizada correctamente.");
         } catch (Exception e) {
             redirectAttributes.addFlashAttribute("mensajeError", "Error al actualizar: " + e.getMessage());
+        }
+        return "redirect:/admin/practicas";
+    }
+
+    // ── Acciones de estado ──────────────────────────────
+    @PostMapping("/parar/{id}")
+    public String parar(@PathVariable int id, RedirectAttributes redirectAttributes) {
+        try {
+            practicaService.parar(id);
+            redirectAttributes.addFlashAttribute("mensajeExito", "Práctica pausada. Alumno notificado.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Error: " + e.getMessage());
+        }
+        return "redirect:/admin/practicas";
+    }
+
+    @PostMapping("/reanudar/{id}")
+    public String reanudar(@PathVariable int id, RedirectAttributes redirectAttributes) {
+        try {
+            practicaService.reanudar(id);
+            redirectAttributes.addFlashAttribute("mensajeExito", "Práctica reanudada. Alumno notificado.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Error: " + e.getMessage());
+        }
+        return "redirect:/admin/practicas";
+    }
+
+    @PostMapping("/cancelar/{id}")
+    public String cancelar(@PathVariable int id, RedirectAttributes redirectAttributes) {
+        try {
+            practicaService.cancelar(id);
+            redirectAttributes.addFlashAttribute("mensajeExito", "Práctica cancelada. Alumno notificado.");
+        } catch (Exception e) {
+            redirectAttributes.addFlashAttribute("mensajeError", "Error: " + e.getMessage());
         }
         return "redirect:/admin/practicas";
     }

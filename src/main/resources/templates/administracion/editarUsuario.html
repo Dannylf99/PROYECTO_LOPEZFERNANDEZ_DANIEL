@@ -36,12 +36,13 @@
         <form th:action="@{/admin/usuarios/actualizar/{id}(id=${id})}" method="post" th:object="${usuario}">
             <div class="form-group">
                 <label class="form-label">Tipo de usuario</label>
-                <input type="text" class="form-input" th:value="${usuario.tipo}" readonly style="background: #f0f0f0;">
+                <input type="text" class="form-input" th:value="${usuario.tipo}" readonly style="background:#f0f0f0;">
                 <input type="hidden" name="tipo" th:value="${usuario.tipo}">
             </div>
             <div class="form-group">
                 <label class="form-label">DNI *</label>
-                <input type="text" class="form-input" name="dni" th:value="${usuario.dni}" pattern="^[0-9]{8}[A-Z]$" title="Formato: 12345678A" required>
+                <input type="text" class="form-input" name="dni" th:value="${usuario.dni}"
+                       pattern="^[0-9]{8}[A-Z]$" required>
             </div>
             <div class="form-row">
                 <div class="form-group">
@@ -55,31 +56,60 @@
             </div>
             <div class="form-group">
                 <label class="form-label">Email *</label>
-                <input type="email" class="form-input" name="email" th:value="${usuario.email}" pattern="^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$" required>
+                <input type="email" class="form-input" name="email" th:value="${usuario.email}" required>
             </div>
             <div class="form-group">
                 <label class="form-label">Nueva Contraseña (dejar en blanco para mantener la actual)</label>
-                <input type="password" class="form-input" name="contrasenya" placeholder="Nueva contraseña (opcional)" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$">
-                <small style="color: #666;">Si quieres cambiar la contraseña, debe cumplir los requisitos de seguridad</small>
+                <input type="password" class="form-input" name="contrasenya" placeholder="Nueva contraseña (opcional)"
+                       pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$">
             </div>
+
+            <!-- Campos ALUMNO -->
             <div th:if="${usuario.tipo == 'ALUMNO'}">
                 <div class="form-group">
                     <label class="form-label">Empresa asignada</label>
                     <select class="form-select" name="empresaAsignada">
                         <option value="">-- Sin empresa --</option>
-                        <option th:each="empresa : ${empresas}" th:value="${empresa.idEmpresa}" th:text="${empresa.nombre}" th:selected="${empresa.idEmpresa == usuario.empresaAsignada}"></option>
+                        <option th:each="empresa : ${empresas}"
+                                th:value="${empresa.idEmpresa}"
+                                th:text="${empresa.nombre}"
+                                th:selected="${empresa.idEmpresa == usuario.empresaAsignada}"></option>
                     </select>
                 </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Curso</label>
+                        <select class="form-select" name="curso" id="selectCurso"
+                                onchange="actualizarHorarios()"
+                                th:attr="data-current-horario=${usuario.horario}">
+                            <option value="">-- Sin asignar --</option>
+                            <option value="DAW" th:selected="${usuario.curso != null and usuario.curso.name() == 'DAW'}">DAW</option>
+                            <option value="DAM" th:selected="${usuario.curso != null and usuario.curso.name() == 'DAM'}">DAM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Horario</label>
+                        <select class="form-select" name="horario" id="selectHorario">
+                            <!-- Rellenado por JS -->
+                        </select>
+                    </div>
+                </div>
             </div>
+
+            <!-- Campos GESTOR -->
             <div th:if="${usuario.tipo == 'GESTOR'}">
                 <div class="form-group">
                     <label class="form-label">Empresa</label>
                     <select class="form-select" name="idEmpresa">
                         <option value="">-- Sin empresa --</option>
-                        <option th:each="empresa : ${empresas}" th:value="${empresa.idEmpresa}" th:text="${empresa.nombre}" th:selected="${empresa.idEmpresa == usuario.idEmpresa}"></option>
+                        <option th:each="empresa : ${empresas}"
+                                th:value="${empresa.idEmpresa}"
+                                th:text="${empresa.nombre}"
+                                th:selected="${empresa.idEmpresa == usuario.idEmpresa}"></option>
                     </select>
                 </div>
             </div>
+
             <div class="form-actions">
                 <a th:href="@{/admin/usuarios}" class="btn-cancelar">Cancelar</a>
                 <button type="submit" class="btn-crear">Guardar cambios</button>
@@ -87,5 +117,42 @@
         </form>
     </div>
 </div>
+<script>
+    const horariosPorCurso = {
+        DAW: [
+            { value: 'MANANA',    label: 'Mañana' },
+            { value: 'TARDE',     label: 'Tarde' },
+            { value: 'DISTANCIA', label: 'Distancia' }
+        ],
+        DAM: [
+            { value: 'TARDE',     label: 'Tarde' },
+            { value: 'DISTANCIA', label: 'Distancia' }
+        ]
+    };
+
+    function actualizarHorarios(valorActual) {
+        const curso = document.getElementById('selectCurso').value;
+        const select = document.getElementById('selectHorario');
+        select.innerHTML = '<option value="">-- Sin asignar --</option>';
+        if (curso && horariosPorCurso[curso]) {
+            horariosPorCurso[curso].forEach(h => {
+                const opt = document.createElement('option');
+                opt.value = h.value;
+                opt.textContent = h.label;
+                if (valorActual && valorActual === h.value) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
+    }
+
+    // Al cargar la página, rellenar horarios con el valor actual
+    window.addEventListener('DOMContentLoaded', () => {
+        const cursoSelect = document.getElementById('selectCurso');
+        if (cursoSelect) {
+            const horarioActual = cursoSelect.getAttribute('data-current-horario');
+            actualizarHorarios(horarioActual);
+        }
+    });
+</script>
 </body>
 </html>

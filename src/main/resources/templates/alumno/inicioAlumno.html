@@ -14,6 +14,11 @@
         <a th:href="@{/web/alumno/practicas}" class="nav-link">Consulta prácticas</a>
         <a href="#" class="nav-link">Subir documentación</a>
         <a th:href="@{/web/alumno/horas}" class="nav-link">Registrar horas</a>
+        <a th:href="@{/web/alumno/notificaciones}" class="nav-link">
+            🔔 <span th:if="${notificacionesNoLeidas > 0}"
+                    th:text="'(' + ${notificacionesNoLeidas} + ')'"
+                    style="color: #fff; font-weight: 700; background: #e74c3c; padding: 1px 6px; border-radius: 10px; font-size: 11px;"></span>
+        </a>
         <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
     </div>
 </nav>
@@ -28,8 +33,11 @@
                     Bienvenido a tu panel de gestión de prácticas. Desde aquí puedes consultar
                     el estado de tus prácticas, subir documentación y registrar tus horas.
                 </p>
-                <div class="notifications-box">
-                    <p>Tienes <strong>x notificaciones</strong>. Pulsa <a href="#" class="link-notif">aquí</a> para acceder a ellas.</p>
+                <div class="notifications-box" th:if="${notificacionesNoLeidas > 0}">
+                    <p>
+                        Tienes <strong th:text="${notificacionesNoLeidas} + ' notificaciones nuevas'"></strong>.
+                        Pulsa <a th:href="@{/web/alumno/notificaciones}" class="link-notif">aquí</a> para verlas.
+                    </p>
                 </div>
             </div>
         </div>
@@ -46,9 +54,7 @@
                         </svg>
                     </div>
                     <h3 class="card-title">Consulta tus prácticas</h3>
-                    <p class="card-description">
-                        Consulta toda la información de tus prácticas: empresa, coordinador, fechas y progreso de horas.
-                    </p>
+                    <p class="card-description">Consulta toda la información de tus prácticas: empresa, coordinador, fechas y progreso de horas.</p>
                     <a th:href="@{/web/alumno/practicas}" class="card-button">Ver prácticas →</a>
                 </div>
 
@@ -61,9 +67,7 @@
                         </svg>
                     </div>
                     <h3 class="card-title">Subir documentación</h3>
-                    <p class="card-description">
-                        Sube los documentos requeridos para tus prácticas.
-                    </p>
+                    <p class="card-description">Sube los documentos requeridos para tus prácticas.</p>
                     <a href="#" class="card-button">Subir documentos →</a>
                 </div>
 
@@ -75,10 +79,20 @@
                         </svg>
                     </div>
                     <h3 class="card-title">Registrar horas</h3>
-                    <p class="card-description">
-                        Registra las horas realizadas en tus prácticas para llevar un seguimiento actualizado.
-                    </p>
+                    <p class="card-description">Registra las horas realizadas en tus prácticas para llevar un seguimiento actualizado.</p>
                     <a th:href="@{/web/alumno/horas}" class="card-button">Registrar →</a>
+                </div>
+
+                <div class="action-card">
+                    <div class="card-icon">
+                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"></path>
+                            <path d="M13.73 21a2 2 0 0 1-3.46 0"></path>
+                        </svg>
+                    </div>
+                    <h3 class="card-title">Notificaciones</h3>
+                    <p class="card-description" th:text="${notificacionesNoLeidas > 0} ? 'Tienes ' + ${notificacionesNoLeidas} + ' notificaciones sin leer.' : 'No tienes notificaciones nuevas.'"></p>
+                    <a th:href="@{/web/alumno/notificaciones}" class="card-button">Ver notificaciones →</a>
                 </div>
 
             </div>

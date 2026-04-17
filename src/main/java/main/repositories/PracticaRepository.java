@@ -9,4 +9,5 @@ import java.util.List;
 public interface PracticaRepository extends JpaRepository<PracticaRol, Integer> {
     List<PracticaRol> findByAlumnoAndEstado(AlumnoRol alumno, PracticaRol.Estado estado);
     List<PracticaRol> findByAlumno(AlumnoRol alumno);
+    List<PracticaRol> findByEstado(PracticaRol.Estado estado);
 }

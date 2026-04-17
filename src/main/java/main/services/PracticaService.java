@@ -1,5 +1,6 @@
 package main.services;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import main.repositories.PracticaRepository;
 import main.roles.AlumnoRol;
@@ -10,27 +11,44 @@ import java.util.List;
 @Service
 public class PracticaService {
 
-    private final PracticaRepository practicaRepo;
+    @Autowired private PracticaRepository practicaRepo;
+    @Autowired private NotificacionService notificacionService;
 
-    public PracticaService(PracticaRepository practicaRepo) {
-        this.practicaRepo = practicaRepo;
-    }
+    public List<PracticaRol> getAllPracticas() { return practicaRepo.findAll(); }
 
-    public List<PracticaRol> getAllPracticas() {
-        return practicaRepo.findAll();
-    }
-
-    public PracticaRol savePractica(PracticaRol practica) {
-        return practicaRepo.save(practica);
-    }
+    public PracticaRol savePractica(PracticaRol practica) { return practicaRepo.save(practica); }
 
     public boolean tienesPracticaEnCurso(AlumnoRol alumno) {
-        List<PracticaRol> preparadas = practicaRepo.findByAlumnoAndEstado(alumno, PracticaRol.Estado.PREPARADA);
-        List<PracticaRol> activas    = practicaRepo.findByAlumnoAndEstado(alumno, PracticaRol.Estado.ACTIVA);
-        return !preparadas.isEmpty() || !activas.isEmpty();
+        return !practicaRepo.findByAlumnoAndEstado(alumno, PracticaRol.Estado.PREPARADA).isEmpty()
+                || !practicaRepo.findByAlumnoAndEstado(alumno, PracticaRol.Estado.ACTIVA).isEmpty();
     }
 
     public List<PracticaRol> getPracticasByAlumno(AlumnoRol alumno) {
         return practicaRepo.findByAlumno(alumno);
+    }
+
+    public void parar(int idPractica) {
+        PracticaRol p = practicaRepo.findById(idPractica).orElseThrow();
+        p.setEstado(PracticaRol.Estado.PARADA);
+        practicaRepo.save(p);
+        notificacionService.crearNotificacion(p.getAlumno(),
+                "Tus prácticas en " + p.getEmpresa().getNombre() +
+                        " han sido pausadas. Contacta con tu coordinador.");
+    }
+
+    public void cancelar(int idPractica) {
+        PracticaRol p = practicaRepo.findById(idPractica).orElseThrow();
+        p.setEstado(PracticaRol.Estado.CANCELADA);
+        practicaRepo.save(p);
+        notificacionService.crearNotificacion(p.getAlumno(),
+                "Tus prácticas en " + p.getEmpresa().getNombre() + " han sido canceladas.");
+    }
+
+    public void reanudar(int idPractica) {
+        PracticaRol p = practicaRepo.findById(idPractica).orElseThrow();
+        p.setEstado(PracticaRol.Estado.ACTIVA);
+        practicaRepo.save(p);
+        notificacionService.crearNotificacion(p.getAlumno(),
+                "Tus prácticas en " + p.getEmpresa().getNombre() + " han sido reanudadas.");
     }
 }

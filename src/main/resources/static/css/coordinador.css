@@ -8,6 +8,8 @@
     --color-coordinador-oscuro: #229954;
 }
 
+body::before { background-color: #2ecc71; }
+
 /* ===================================
    NAVBAR DEL COORDINADOR (VERDE)
    =================================== */

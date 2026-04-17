@@ -18,11 +18,11 @@ public class NotificacionService {
     }
 
     public List<NotificacionRol> getNotificacionesByAlumno(AlumnoRol alumno) {
-        return notificacionRepo.findByAlumnoOrderByFechaDesc(alumno);
+        return notificacionRepo.findByAlumnoAndBorradaFalseOrderByFechaDesc(alumno);
     }
 
     public long countNoLeidas(AlumnoRol alumno) {
-        return notificacionRepo.findByAlumnoAndLeidaFalse(alumno).size();
+        return notificacionRepo.findByAlumnoAndLeidaFalseAndBorradaFalse(alumno).size();
     }
 
     public void crearNotificacion(AlumnoRol alumno, String mensaje) {
@@ -30,9 +30,17 @@ public class NotificacionService {
         notificacionRepo.save(notif);
     }
 
-    public void marcarLeida(int idNotificacion) {
-        notificacionRepo.findById(idNotificacion).ifPresent(n -> {
+    public void marcarLeida(int id) {
+        notificacionRepo.findById(id).ifPresent(n -> {
             n.setLeida(true);
+            notificacionRepo.save(n);
+        });
+    }
+
+    public void borrar(int id) {
+        // Baja lógica: queda en BD pero no se muestra
+        notificacionRepo.findById(id).ifPresent(n -> {
+            n.setBorrada(true);
             notificacionRepo.save(n);
         });
     }

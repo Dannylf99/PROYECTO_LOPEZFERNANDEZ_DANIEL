@@ -31,6 +31,12 @@ public class RegistroHorasRol {
     @Column(name = "hora_fin", nullable = false)
     private LocalTime horaFin;
 
+    @Column(name = "pausa_inicio")
+    private LocalTime pausaInicio;
+
+    @Column(name = "pausa_fin")
+    private LocalTime pausaFin;
+
     @Column(nullable = false)
     private BigDecimal horas;
 
@@ -40,7 +46,6 @@ public class RegistroHorasRol {
 
     public RegistroHorasRol() {}
 
-    // Getters y Setters
     public int getIdRegistro() { return idRegistro; }
     public void setIdRegistro(int idRegistro) { this.idRegistro = idRegistro; }
 
@@ -55,6 +60,12 @@ public class RegistroHorasRol {
 
     public LocalTime getHoraFin() { return horaFin; }
     public void setHoraFin(LocalTime horaFin) { this.horaFin = horaFin; }
+
+    public LocalTime getPausaInicio() { return pausaInicio; }
+    public void setPausaInicio(LocalTime pausaInicio) { this.pausaInicio = pausaInicio; }
+
+    public LocalTime getPausaFin() { return pausaFin; }
+    public void setPausaFin(LocalTime pausaFin) { this.pausaFin = pausaFin; }
 
     public BigDecimal getHoras() { return horas; }
     public void setHoras(BigDecimal horas) { this.horas = horas; }

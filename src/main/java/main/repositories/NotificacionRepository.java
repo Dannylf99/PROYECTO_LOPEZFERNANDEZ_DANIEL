@@ -7,6 +7,6 @@ import main.roles.NotificacionRol;
 import java.util.List;
 
 public interface NotificacionRepository extends JpaRepository<NotificacionRol, Integer> {
-    List<NotificacionRol> findByAlumnoOrderByFechaDesc(AlumnoRol alumno);
-    List<NotificacionRol> findByAlumnoAndLeidaFalse(AlumnoRol alumno);
+    List<NotificacionRol> findByAlumnoAndBorradaFalseOrderByFechaDesc(AlumnoRol alumno);
+    List<NotificacionRol> findByAlumnoAndLeidaFalseAndBorradaFalse(AlumnoRol alumno);
 }

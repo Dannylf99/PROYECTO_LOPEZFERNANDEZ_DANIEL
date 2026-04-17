@@ -42,18 +42,11 @@
         <ul>
             <li><strong>DNI:</strong> Formato válido (12345678A)</li>
             <li><strong>Email:</strong> Formato válido (usuario@dominio.com)</li>
-            <li><strong>Contraseña:</strong> Mínimo 8 caracteres, debe incluir:
-                <ul>
-                    <li>Al menos 1 letra mayúscula</li>
-                    <li>Al menos 1 letra minúscula</li>
-                    <li>Al menos 1 número</li>
-                    <li>Al menos 1 carácter especial (@$!%*?&)</li>
-                </ul>
-            </li>
+            <li><strong>Contraseña:</strong> Mínimo 8 caracteres con mayúscula, minúscula, número y carácter especial</li>
         </ul>
     </div>
     <div class="form-card">
-        <form th:action="@{/admin/usuarios/crear}" method="post" id="formUsuario">
+        <form th:action="@{/admin/usuarios/crear}" method="post">
             <div class="form-group">
                 <label class="form-label">Tipo de usuario *</label>
                 <select class="form-select" name="tipo" id="selectTipo" onchange="cambiarCampos()" required>
@@ -66,8 +59,9 @@
             </div>
             <div class="form-group">
                 <label class="form-label">DNI *</label>
-                <input type="text" class="form-input" name="dni" placeholder="12345678A" pattern="^[0-9]{8}[A-Z]$" title="Formato: 12345678A" required>
-                <small style="color: #666;">Formato: 8 números + 1 letra mayúscula (ej: 12345678A)</small>
+                <input type="text" class="form-input" name="dni" placeholder="12345678A"
+                       pattern="^[0-9]{8}[A-Z]$" title="Formato: 12345678A" required>
+                <small style="color:#666;">Formato: 8 números + 1 letra mayúscula</small>
             </div>
             <div class="form-row">
                 <div class="form-group">
@@ -82,14 +76,16 @@
             <div class="form-row">
                 <div class="form-group">
                     <label class="form-label">Email *</label>
-                    <input type="email" class="form-input" name="email" placeholder="email@ejemplo.com" pattern="^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}$" required>
+                    <input type="email" class="form-input" name="email" placeholder="email@ejemplo.com" required>
                 </div>
                 <div class="form-group">
                     <label class="form-label">Contraseña *</label>
-                    <input type="password" class="form-input" name="contrasenya" placeholder="Contraseña segura" pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" required>
-                    <small style="color: #666;">Mínimo 8 caracteres con mayúscula, minúscula, número y carácter especial</small>
+                    <input type="password" class="form-input" name="contrasenya" placeholder="Contraseña segura"
+                           pattern="^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$" required>
                 </div>
             </div>
+
+            <!-- Campos específicos ALUMNO -->
             <div id="campos-alumno" class="campos-rol" style="display:none">
                 <div class="form-group">
                     <label class="form-label">Empresa asignada</label>
@@ -98,7 +94,25 @@
                         <option th:each="empresa : ${empresas}" th:value="${empresa.idEmpresa}" th:text="${empresa.nombre}"></option>
                     </select>
                 </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Curso</label>
+                        <select class="form-select" name="curso" id="selectCurso" onchange="actualizarHorarios()">
+                            <option value="">-- Sin asignar --</option>
+                            <option value="DAW">DAW</option>
+                            <option value="DAM">DAM</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Horario</label>
+                        <select class="form-select" name="horario" id="selectHorario">
+                            <option value="">-- Selecciona primero el curso --</option>
+                        </select>
+                    </div>
+                </div>
             </div>
+
+            <!-- Campos específicos GESTOR -->
             <div id="campos-gestor" class="campos-rol" style="display:none">
                 <div class="form-group">
                     <label class="form-label">Empresa</label>
@@ -108,6 +122,7 @@
                     </select>
                 </div>
             </div>
+
             <div class="form-actions">
                 <a th:href="@{/admin/usuarios}" class="btn-cancelar">Cancelar</a>
                 <button type="submit" class="btn-crear">Crear usuario</button>
@@ -116,11 +131,38 @@
     </div>
 </div>
 <script>
+    const horariosPorCurso = {
+        DAW: [
+            { value: 'MANANA',    label: 'Mañana' },
+            { value: 'TARDE',     label: 'Tarde' },
+            { value: 'DISTANCIA', label: 'Distancia' }
+        ],
+        DAM: [
+            { value: 'TARDE',     label: 'Tarde' },
+            { value: 'DISTANCIA', label: 'Distancia' }
+        ]
+    };
+
     function cambiarCampos() {
         const tipo = document.getElementById('selectTipo').value;
         document.querySelectorAll('.campos-rol').forEach(el => el.style.display = 'none');
         if (tipo === 'ALUMNO') document.getElementById('campos-alumno').style.display = 'block';
         if (tipo === 'GESTOR') document.getElementById('campos-gestor').style.display = 'block';
+    }
+
+    function actualizarHorarios(valorActual) {
+        const curso = document.getElementById('selectCurso').value;
+        const select = document.getElementById('selectHorario');
+        select.innerHTML = '<option value="">-- Sin asignar --</option>';
+        if (curso && horariosPorCurso[curso]) {
+            horariosPorCurso[curso].forEach(h => {
+                const opt = document.createElement('option');
+                opt.value = h.value;
+                opt.textContent = h.label;
+                if (valorActual && valorActual === h.value) opt.selected = true;
+                select.appendChild(opt);
+            });
+        }
     }
 </script>
 </body>

@@ -7,150 +7,57 @@
     <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
     <link rel="stylesheet" th:href="@{/css/alumno.css}">
     <style>
-        .horas-container {
-            max-width: 650px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-        .page-header {
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 32px;
-        }
-        .btn-volver {
-            display: inline-flex;
-            align-items: center;
-            gap: 6px;
-            color: #ff8c42;
-            font-size: 14px;
-            font-weight: 600;
-            text-decoration: none;
-            transition: gap 0.2s;
-        }
+        .horas-container { max-width: 650px; margin: 0 auto; padding: 40px 20px; }
+        .page-header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
+        .btn-volver { display: inline-flex; align-items: center; gap: 6px; color: #ff8c42; font-size: 14px; font-weight: 600; text-decoration: none; transition: gap 0.2s; }
         .btn-volver:hover { gap: 10px; }
         .page-title { font-size: 26px; font-weight: 700; color: #333; margin: 0; }
 
-        .form-card {
-            background: white;
-            border-radius: 20px;
-            padding: 36px;
-            box-shadow: 0 6px 24px rgba(0,0,0,0.07);
+        .aviso-parada {
+            background: linear-gradient(135deg, #fff4ec, #ffe8d4);
+            border: 2px solid #ff8c42;
+            border-radius: 16px;
+            padding: 24px 28px;
+            text-align: center;
         }
+        .aviso-parada .icono { font-size: 40px; margin-bottom: 12px; }
+        .aviso-parada h3 { font-size: 20px; font-weight: 700; color: #e67329; margin-bottom: 8px; }
+        .aviso-parada p { font-size: 15px; color: #666; }
+
+        .form-card { background: white; border-radius: 20px; padding: 36px; box-shadow: 0 6px 24px rgba(0,0,0,0.07); }
         .form-group { margin-bottom: 20px; }
-        .form-label {
-            display: block;
-            font-size: 12px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.6px;
-            color: #aaa;
-            margin-bottom: 8px;
-        }
-        .form-input, .form-select {
-            width: 100%;
-            padding: 12px 16px;
-            border: 2px solid #eee;
-            border-radius: 10px;
-            font-size: 15px;
-            color: #333;
-            transition: border-color 0.2s;
-            box-sizing: border-box;
-            background: white;
-        }
-        .form-input:focus, .form-select:focus {
-            outline: none;
-            border-color: #ff8c42;
-        }
+        .form-label { display: block; font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.6px; color: #aaa; margin-bottom: 8px; }
+        .form-input, .form-select { width: 100%; padding: 12px 16px; border: 2px solid #eee; border-radius: 10px; font-size: 15px; color: #333; transition: border-color 0.2s; box-sizing: border-box; background: white; }
+        .form-input:focus, .form-select:focus { outline: none; border-color: #ff8c42; }
         .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
 
-        .horas-calculadas {
-            background: linear-gradient(135deg, #fff4ec, #ffe8d4);
-            border: 2px solid #ffb366;
-            border-radius: 12px;
-            padding: 16px 20px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            margin-bottom: 24px;
-        }
+        .pausa-section { background: #fafafa; border: 1px solid #eee; border-radius: 12px; padding: 16px 20px; margin-bottom: 20px; }
+        .pausa-toggle { display: flex; align-items: center; gap: 10px; cursor: pointer; font-size: 14px; font-weight: 600; color: #666; user-select: none; }
+        .pausa-toggle input[type="checkbox"] { width: 18px; height: 18px; accent-color: #ff8c42; cursor: pointer; }
+        .pausa-campos { display: none; margin-top: 16px; }
+        .pausa-campos.visible { display: block; }
+
+        .horas-calculadas { background: linear-gradient(135deg, #fff4ec, #ffe8d4); border: 2px solid #ffb366; border-radius: 12px; padding: 16px 20px; display: flex; align-items: center; gap: 16px; margin-bottom: 24px; }
         .horas-calculadas .numero { font-size: 36px; font-weight: 700; color: #ff8c42; }
         .horas-calculadas .texto { font-size: 14px; color: #888; }
         .horas-calculadas .texto strong { display: block; font-size: 15px; color: #555; margin-bottom: 2px; }
 
-        .btn-registrar {
-            width: 100%;
-            padding: 14px;
-            background: linear-gradient(135deg, #ff8c42, #ffb366);
-            color: white;
-            border: none;
-            border-radius: 25px;
-            font-size: 16px;
-            font-weight: 600;
-            cursor: pointer;
-            transition: all 0.3s;
-            box-shadow: 0 4px 15px rgba(255,140,66,0.3);
-        }
-        .btn-registrar:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 20px rgba(255,140,66,0.4);
-        }
-        .btn-registrar:disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-            transform: none;
-        }
+        .btn-registrar { width: 100%; padding: 14px; background: linear-gradient(135deg, #ff8c42, #ffb366); color: white; border: none; border-radius: 25px; font-size: 16px; font-weight: 600; cursor: pointer; transition: all 0.3s; box-shadow: 0 4px 15px rgba(255,140,66,0.3); }
+        .btn-registrar:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(255,140,66,0.4); }
+        .btn-registrar:disabled { opacity: 0.5; cursor: not-allowed; transform: none; }
 
-        .historial-title {
-            font-size: 18px;
-            font-weight: 700;
-            color: #333;
-            margin: 36px 0 16px 0;
-        }
-        .registro-item {
-            background: white;
-            border-radius: 12px;
-            padding: 16px 20px;
-            margin-bottom: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 16px;
-        }
+        .historial-title { font-size: 18px; font-weight: 700; color: #333; margin: 36px 0 16px 0; }
+        .registro-item { background: white; border-radius: 12px; padding: 16px 20px; margin-bottom: 10px; box-shadow: 0 2px 10px rgba(0,0,0,0.05); display: flex; justify-content: space-between; align-items: center; gap: 16px; }
         .registro-left { flex: 1; }
         .registro-fecha { font-size: 14px; font-weight: 600; color: #333; }
         .registro-horario { font-size: 13px; color: #888; margin-top: 3px; }
         .registro-right { display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
         .registro-horas { font-size: 20px; font-weight: 700; color: #ff8c42; }
-        .estado-badge {
-            padding: 4px 12px;
-            border-radius: 20px;
-            font-size: 11px;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 0.4px;
-        }
+        .estado-badge { padding: 4px 12px; border-radius: 20px; font-size: 11px; font-weight: 700; text-transform: uppercase; }
         .estado-pendiente  { background: #fff4ec; color: #e67329; }
         .estado-validada   { background: #e8f8f0; color: #229954; }
         .estado-rechazada  { background: #fdf0f0; color: #c0392b; }
-
-        .sin-registros {
-            text-align: center;
-            color: #aaa;
-            font-style: italic;
-            padding: 24px;
-            background: white;
-            border-radius: 12px;
-        }
-        .sin-practicas {
-            text-align: center;
-            color: #aaa;
-            padding: 60px 20px;
-            background: white;
-            border-radius: 20px;
-            font-size: 15px;
-        }
+        .sin-registros { text-align: center; color: #aaa; font-style: italic; padding: 24px; background: white; border-radius: 12px; }
     </style>
 </head>
 <body>
@@ -160,17 +67,19 @@
         <a th:href="@{/web/alumno/practicas}" class="nav-link">Consulta prácticas</a>
         <a href="#" class="nav-link">Subir documentación</a>
         <a th:href="@{/web/alumno/horas}" class="nav-link active">Registrar horas</a>
+        <a th:href="@{/web/alumno/notificaciones}" class="nav-link">
+            🔔 <span th:if="${notificacionesNoLeidas > 0}"
+                    th:text="'(' + ${notificacionesNoLeidas} + ')'"
+                    style="color:#ff8c42; font-weight:700;"></span>
+        </a>
         <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
     </div>
 </nav>
 
 <div class="horas-container">
-
     <div class="page-header">
         <a th:href="@{/web/inicioAlumno}" class="btn-volver">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
             Volver
         </a>
         <h1 class="page-title">Registrar horas</h1>
@@ -179,25 +88,30 @@
     <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}" style="margin-bottom:20px;"></div>
     <div th:if="${mensajeError}" class="alert alert-error" th:text="${mensajeError}" style="margin-bottom:20px;"></div>
 
-    <!-- Sin prácticas activas -->
-    <div th:if="${#lists.isEmpty(practicas)}" class="sin-practicas">
-        <p>No tienes prácticas activas en este momento.</p>
+    <!-- Aviso práctica parada -->
+    <div th:if="${practicaParada}" class="aviso-parada" style="margin-bottom:24px;">
+        <div class="icono">⏸️</div>
+        <h3>Tus prácticas están pausadas</h3>
+        <p>No puedes registrar horas mientras tus prácticas estén pausadas.<br>Contacta con tu coordinador para más información.</p>
+    </div>
+
+    <!-- Sin prácticas activas y no parada -->
+    <div th:if="${!practicaParada and #lists.isEmpty(practicas)}"
+         style="text-align:center; color:#aaa; padding:60px 20px; background:white; border-radius:20px;">
+        <p style="font-size:16px;">No tienes prácticas activas en este momento.</p>
     </div>
 
     <!-- Formulario -->
-    <div th:if="${!#lists.isEmpty(practicas)}" class="form-card">
+    <div th:if="${!practicaParada and !#lists.isEmpty(practicas)}" class="form-card">
         <form th:action="@{/web/alumno/horas/registrar}" method="post">
 
             <div class="form-group" th:if="${#lists.size(practicas) > 1}">
                 <label class="form-label">Práctica</label>
                 <select class="form-select" name="idPractica" required>
-                    <option th:each="p : ${practicas}"
-                            th:value="${p.idPractica}"
-                            th:text="${p.empresa.nombre}"></option>
+                    <option th:each="p : ${practicas}" th:value="${p.idPractica}" th:text="${p.empresa.nombre}"></option>
                 </select>
             </div>
-            <input th:if="${#lists.size(practicas) == 1}" type="hidden"
-                   name="idPractica" th:value="${practicas[0].idPractica}">
+            <input th:if="${#lists.size(practicas) == 1}" type="hidden" name="idPractica" th:value="${practicas[0].idPractica}">
 
             <div class="form-group">
                 <label class="form-label">Fecha</label>
@@ -206,12 +120,32 @@
 
             <div class="form-row">
                 <div class="form-group">
-                    <label class="form-label">Hora de inicio</label>
+                    <label class="form-label">Hora de entrada</label>
                     <input type="time" class="form-input" name="horaInicio" id="horaInicio" required onchange="calcularHoras()">
                 </div>
                 <div class="form-group">
-                    <label class="form-label">Hora de fin</label>
+                    <label class="form-label">Hora de salida</label>
                     <input type="time" class="form-input" name="horaFin" id="horaFin" required onchange="calcularHoras()">
+                </div>
+            </div>
+
+            <!-- Pausa opcional -->
+            <div class="pausa-section">
+                <label class="pausa-toggle">
+                    <input type="checkbox" id="tienePausa" onchange="togglePausa()">
+                    ¿Has tenido una pausa? (ej: hora de comer)
+                </label>
+                <div class="pausa-campos" id="pausaCampos">
+                    <div class="form-row" style="margin-top:0;">
+                        <div class="form-group">
+                            <label class="form-label">Inicio de la pausa</label>
+                            <input type="time" class="form-input" name="pausaInicio" id="pausaInicio" onchange="calcularHoras()">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Fin de la pausa</label>
+                            <input type="time" class="form-input" name="pausaFin" id="pausaFin" onchange="calcularHoras()">
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -231,32 +165,39 @@
 
     <!-- Historial -->
     <h2 class="historial-title">Historial de registros</h2>
-
-    <div th:if="${#lists.isEmpty(registros)}" class="sin-registros">
-        No hay registros de horas aún.
-    </div>
-
+    <div th:if="${#lists.isEmpty(registros)}" class="sin-registros">No hay registros de horas aún.</div>
     <div th:each="registro : ${registros}" class="registro-item">
         <div class="registro-left">
             <div class="registro-fecha" th:text="${registro.fecha}"></div>
-            <div class="registro-horario"
-                 th:text="${registro.horaInicio + ' — ' + registro.horaFin + ' · ' + registro.practica.empresa.nombre}">
+            <div class="registro-horario">
+                <span th:text="${registro.horaInicio + ' — ' + registro.horaFin}"></span>
+                <span th:if="${registro.pausaInicio != null}"
+                      th:text="' · Pausa: ' + ${registro.pausaInicio} + '-' + ${registro.pausaFin}"
+                      style="color:#bbb; font-size:12px;"></span>
+                <span th:text="' · ' + ${registro.practica.empresa.nombre}" style="color:#aaa;"></span>
             </div>
         </div>
         <div class="registro-right">
             <span class="registro-horas" th:text="${registro.horas} + 'h'"></span>
             <span class="estado-badge"
                   th:classappend="'estado-' + ${#strings.toLowerCase(registro.estado.name())}"
-                  th:text="${registro.estado}">
-            </span>
+                  th:text="${registro.estado}"></span>
         </div>
     </div>
-
 </div>
 
 <script>
-    // Fecha máxima: hoy
     document.getElementById('fecha').max = new Date().toISOString().split('T')[0];
+
+    function togglePausa() {
+        const tiene = document.getElementById('tienePausa').checked;
+        document.getElementById('pausaCampos').classList.toggle('visible', tiene);
+        if (!tiene) {
+            document.getElementById('pausaInicio').value = '';
+            document.getElementById('pausaFin').value = '';
+        }
+        calcularHoras();
+    }
 
     function calcularHoras() {
         const inicio = document.getElementById('horaInicio').value;
@@ -266,9 +207,15 @@
 
         if (!inicio || !fin) { div.style.display = 'none'; btn.disabled = true; return; }
 
-        const [h1, m1] = inicio.split(':').map(Number);
-        const [h2, m2] = fin.split(':').map(Number);
-        const totalMin = (h2 * 60 + m2) - (h1 * 60 + m1);
+        const toMin = t => { const [h,m] = t.split(':').map(Number); return h*60+m; };
+        let totalMin = toMin(fin) - toMin(inicio);
+
+        const tienePausa = document.getElementById('tienePausa').checked;
+        if (tienePausa) {
+            const pI = document.getElementById('pausaInicio').value;
+            const pF = document.getElementById('pausaFin').value;
+            if (pI && pF) totalMin -= (toMin(pF) - toMin(pI));
+        }
 
         if (totalMin <= 0) { div.style.display = 'none'; btn.disabled = true; return; }
 

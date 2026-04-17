@@ -8,7 +8,7 @@ import java.sql.Date;
 public class PracticaRol {
 
     public enum Estado {
-        PREPARADA, ACTIVA, FINALIZADA
+        PREPARADA, ACTIVA, PARADA, FINALIZADA, CANCELADA
     }
 
     @Id
@@ -46,19 +46,6 @@ public class PracticaRol {
 
     public PracticaRol() {}
 
-    public PracticaRol(int idPractica, AlumnoRol alumno, EmpresaRol empresa, CoordinadorRol coordinador,
-                       Date fechaInicio, Date fechaFin, int horasTotales, int horasHechas, Estado estado) {
-        this.idPractica = idPractica;
-        this.alumno = alumno;
-        this.empresa = empresa;
-        this.coordinador = coordinador;
-        this.fechaInicio = fechaInicio;
-        this.fechaFin = fechaFin;
-        this.horasTotales = horasTotales;
-        this.horasHechas = horasHechas;
-        this.estado = estado;
-    }
-
     // Getters y Setters
     public int getIdPractica() { return idPractica; }
     public void setIdPractica(int idPractica) { this.idPractica = idPractica; }
@@ -87,14 +74,9 @@ public class PracticaRol {
     public Estado getEstado() { return estado; }
     public void setEstado(Estado estado) { this.estado = estado; }
 
-    // Métodos específicos
-    public void iniciarPractica() {
-        this.estado = Estado.ACTIVA;
-        System.out.println("Iniciando práctica para " + alumno.getNombre());
-    }
-
-    public void finalizarPractica() {
-        this.estado = Estado.FINALIZADA;
-        System.out.println("Finalizando práctica para " + alumno.getNombre());
-    }
+    public void iniciarPractica() { this.estado = Estado.ACTIVA; }
+    public void finalizarPractica() { this.estado = Estado.FINALIZADA; }
+    public void pararPractica() { this.estado = Estado.PARADA; }
+    public void cancelarPractica() { this.estado = Estado.CANCELADA; }
+    public void reanudarPractica() { this.estado = Estado.ACTIVA; }
 }

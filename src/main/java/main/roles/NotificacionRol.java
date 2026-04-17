@@ -1,7 +1,6 @@
 package main.roles;
 
 import jakarta.persistence.*;
-import main.roles.AlumnoRol;
 import java.time.LocalDate;
 
 @Entity
@@ -26,17 +25,19 @@ public class NotificacionRol {
     @Column(nullable = false)
     private boolean leida = false;
 
+    @Column(nullable = false)
+    private boolean borrada = false;
+
     public NotificacionRol() {}
 
     public NotificacionRol(AlumnoRol alumno, String mensaje, LocalDate fecha) {
         this.alumno = alumno;
         this.mensaje = mensaje;
         this.fecha = fecha;
-        this.leida = false;
     }
 
     public int getIdNotificacion() { return idNotificacion; }
-    public void setIdNotificacion(int idNotificacion) { this.idNotificacion = idNotificacion; }
+    public void setIdNotificacion(int id) { this.idNotificacion = id; }
 
     public AlumnoRol getAlumno() { return alumno; }
     public void setAlumno(AlumnoRol alumno) { this.alumno = alumno; }
@@ -50,5 +51,6 @@ public class NotificacionRol {
     public boolean isLeida() { return leida; }
     public void setLeida(boolean leida) { this.leida = leida; }
 
-    public void marcarComoLeida() { this.leida = true; }
+    public boolean isBorrada() { return borrada; }
+    public void setBorrada(boolean borrada) { this.borrada = borrada; }
 }
