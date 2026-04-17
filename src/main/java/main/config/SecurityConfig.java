@@ -14,13 +14,13 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers("/css/**", "/js/**", "/images/**").permitAll()  // Recursos estáticos
-                        .requestMatchers("/web/login").permitAll()  // Login accesible sin autenticar
-                        .anyRequest().permitAll()  // TODO: Cambiar esto después para proteger rutas
+                        .requestMatchers("/css/**", "/js/**", "/img/**", "/images/**", "/favicon.ico").permitAll()
+                        .requestMatchers("/web/login").permitAll()
+                        .anyRequest().permitAll()
                 )
-                .formLogin(form -> form.disable())  // Desactivar login de Spring Security
-                .csrf(csrf -> csrf.disable())  // Desactivar CSRF temporalmente
-                .logout(logout -> logout.disable());  // Desactivar logout de Spring Security
+                .formLogin(form -> form.disable())
+                .csrf(csrf -> csrf.disable())
+                .logout(logout -> logout.disable());
 
         return http.build();
     }

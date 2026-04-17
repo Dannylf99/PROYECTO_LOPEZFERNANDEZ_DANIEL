@@ -1,9 +1,11 @@
 package main.controllers;
 
-import org.springframework.web.bind.annotation.*;
-
+import jakarta.servlet.http.HttpSession;
+import main.roles.AlumnoRol;
 import main.roles.NotificacionRol;
 import main.services.NotificacionService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -11,19 +13,24 @@ import java.util.List;
 @RequestMapping("/notificaciones")
 public class NotificacionController {
 
+    @Autowired
     private final NotificacionService notificacionService;
 
     public NotificacionController(NotificacionService notificacionService) {
         this.notificacionService = notificacionService;
     }
 
+    // Obtener notificaciones del alumno en sesión
     @GetMapping
-    public List<NotificacionRol> getAllNotificaciones() {
-        return notificacionService.getAllNotificaciones();
+    public List<NotificacionRol> getNotificaciones(HttpSession session) {
+        Object usuario = session.getAttribute("usuario");
+        if (!(usuario instanceof AlumnoRol)) return List.of();
+        return notificacionService.getNotificacionesByAlumno((AlumnoRol) usuario);
     }
 
-    @PostMapping("/save")
-    public NotificacionRol saveNotificacion(@RequestBody NotificacionRol notificacion) {
-        return notificacionService.saveNotificacion(notificacion);
+    // Marcar una notificación como leída
+    @PostMapping("/leer/{id}")
+    public void marcarLeida(@PathVariable int id) {
+        notificacionService.marcarLeida(id);
     }
 }

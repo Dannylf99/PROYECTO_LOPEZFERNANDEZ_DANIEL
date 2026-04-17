@@ -4,61 +4,92 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio - Coordinador | Gestion@</title>
-
     <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
     <link rel="stylesheet" th:href="@{/css/coordinador.css}">
 </head>
-
-<body class="role-coordinador">
-
+<body>
 <nav class="navbar-coordinador">
     <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
-
     <div class="nav-menu">
         <a href="#" class="nav-link">Alumnos</a>
         <a href="#" class="nav-link">Seguimiento</a>
+        <a th:href="@{/web/coordinador/validarHoras}" class="nav-link">Validar horas</a>
         <a href="#" class="nav-link">Evaluaciones</a>
         <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
     </div>
 </nav>
 
 <div class="container-coordinador">
+    <div class="layout-two-columns">
 
-    <div class="welcome-section">
-        <h1 class="welcome-title">
-            Bienvenido, <span th:text="${usuario.nombre}">NOMBRE</span>
-        </h1>
-
-        <p class="welcome-text">
-            Panel del coordinador para la gestión y seguimiento de alumnos en prácticas.
-        </p>
-    </div>
-
-    <div class="actions-grid">
-
-        <div class="action-card">
-            <div class="card-icon">👨‍🎓</div>
-            <h3 class="card-title">Gestión de alumnos</h3>
-            <p class="card-description">Consultar y gestionar alumnos asignados.</p>
-            <a href="#" class="card-button">Acceder</a>
+        <div class="column-left">
+            <div class="welcome-section">
+                <h1 class="welcome-title">Bienvenido, <span th:text="${usuario.nombre}">NOMBRE</span></h1>
+                <p class="welcome-text">
+                    Panel del coordinador para la gestión y seguimiento de alumnos en prácticas.
+                </p>
+                <div class="notifications-box">
+                    <p>Tienes <strong>x notificaciones</strong>. Pulsa <a href="#" class="link-notif">aquí</a> para acceder a ellas.</p>
+                </div>
+            </div>
         </div>
 
-        <div class="action-card">
-            <div class="card-icon">📊</div>
-            <h3 class="card-title">Seguimiento</h3>
-            <p class="card-description">Control del progreso de prácticas.</p>
-            <a href="#" class="card-button">Ver</a>
-        </div>
+        <div class="column-right">
 
-        <div class="action-card">
-            <div class="card-icon">📝</div>
-            <h3 class="card-title">Evaluaciones</h3>
-            <p class="card-description">Evaluar desempeño de alumnos.</p>
-            <a href="#" class="card-button">Evaluar</a>
-        </div>
+            <div class="action-card">
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
+                </div>
+                <h3 class="card-title">Gestión de alumnos</h3>
+                <p class="card-description">Consultar y gestionar los alumnos asignados a tu coordinación.</p>
+                <a href="#" class="card-button">Acceder →</a>
+            </div>
 
+            <div class="action-card">
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"></circle>
+                        <path d="M12 6v6l4 2"></path>
+                    </svg>
+                </div>
+                <h3 class="card-title">Validar horas</h3>
+                <p class="card-description">Revisa y valida las horas registradas por tus alumnos en prácticas.</p>
+                <a th:href="@{/web/coordinador/validarHoras}" class="card-button">Validar →</a>
+            </div>
+
+            <div class="action-card">
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 3v18h18"></path>
+                        <path d="M7 14l4-4 4 4 6-6"></path>
+                    </svg>
+                </div>
+                <h3 class="card-title">Seguimiento</h3>
+                <p class="card-description">Control del progreso y seguimiento de las prácticas de cada alumno.</p>
+                <a href="#" class="card-button">Ver →</a>
+            </div>
+
+            <div class="action-card">
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                </div>
+                <h3 class="card-title">Evaluaciones</h3>
+                <p class="card-description">Evaluar el desempeño de los alumnos durante sus prácticas.</p>
+                <a href="#" class="card-button">Evaluar →</a>
+            </div>
+
+        </div>
     </div>
 </div>
-
 </body>
 </html>

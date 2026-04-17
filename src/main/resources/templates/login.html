@@ -4,63 +4,150 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Iniciar sesión - Gestion@</title>
-    
-    <!-- CSS GLOBAL -->
+
     <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
-    
-    <!-- CSS ESPECÍFICO DEL LOGIN -->
     <link rel="stylesheet" th:href="@{/css/login.css}">
+
+    <style>
+        /* Modal */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.45);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+        }
+        .modal-overlay.active {
+            display: flex;
+        }
+        .modal {
+            background: white;
+            border-radius: 12px;
+            padding: 35px 40px;
+            max-width: 460px;
+            width: 90%;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            text-align: center;
+        }
+        .modal-icon {
+            font-size: 48px;
+            margin-bottom: 16px;
+        }
+        .modal h2 {
+            font-size: 22px;
+            color: #333;
+            margin-bottom: 12px;
+        }
+        .modal p {
+            font-size: 15px;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 10px;
+        }
+        .modal a.cita-link {
+            display: inline-block;
+            margin: 12px 0 20px 0;
+            background: linear-gradient(135deg, #20b2aa, #3fcfc7);
+            color: white;
+            padding: 10px 24px;
+            border-radius: 25px;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s;
+            box-shadow: 0 4px 12px rgba(32,178,170,0.3);
+        }
+        .modal a.cita-link:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 16px rgba(32,178,170,0.4);
+        }
+        .modal button.btn-cerrar {
+            background: #f0f0f0;
+            color: #555;
+            border: none;
+            padding: 10px 30px;
+            border-radius: 25px;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+        .modal button.btn-cerrar:hover {
+            background: #ddd;
+        }
+    </style>
 </head>
 <body>
-    <!-- Barra de navegación -->
-    <nav>
-        <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
-        <div class="nav-buttons">
-            <a th:href="@{/web/registro}" class="btn-nav">Registrarse</a>
-            <a th:href="@{/web/login}" class="btn-nav">Iniciar sesión</a>
-        </div>
-    </nav>
-
-    <!-- Formulario de login -->
-    <div class="login-container">
-        <div class="login-box">
-            <h1>Inicia sesión</h1>
-            
-            <!-- Mensaje de error si el login falla -->
-            <div th:if="${error}" class="alert alert-error">
-                <span th:text="${error}">Usuario o contraseña incorrectos</span>
-            </div>
-            
-            <!-- Formulario con Thymeleaf -->
-            <form th:action="@{/web/login}" method="post">
-                <div class="form-group">
-                    <input type="email" 
-                           id="email" 
-                           name="email" 
-                           placeholder="Email" 
-                           required 
-                           autocomplete="email">
-                </div>
-                
-                <div class="form-group">
-                    <input type="password" 
-                           id="contrasenya" 
-                           name="contrasenya" 
-                           placeholder="Contraseña" 
-                           required 
-                           autocomplete="current-password">
-                </div>
-                
-                <button type="submit" class="btn btn-primary btn-block">
-                    Iniciar sesión
-                </button>
-            </form>
-            
-            <p class="info-text">
-                Si no tienes usuario y contraseña, contacta al<br>
-                centro para que te proporcione las claves.
-            </p>
-        </div>
+<!-- Barra de navegación -->
+<nav>
+    <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
+    <div class="nav-buttons">
+        <button onclick="abrirModal()" class="btn-nav">Registrarse</button>
+        <a th:href="@{/web/login}" class="btn-nav">Iniciar sesión</a>
     </div>
+</nav>
+
+<!-- Modal de registro no admitido -->
+<div class="modal-overlay" id="modalRegistro">
+    <div class="modal">
+        <div class="modal-icon">ℹ️</div>
+        <h2>Registro no disponible</h2>
+        <p>Los registros a través de la web no están admitidos actualmente.</p>
+        <p>Si eres alumno o personal del centro, contacta con tu <strong>tutor</strong> para que te proporcione las credenciales de acceso.</p>
+        <p>Si no tienes tutor asignado o necesitas más información, puedes pedir cita con secretaría:</p>
+        <a class="cita-link"
+           href="https://app.bookitit.com/es/hosteds/widgetdefault/2cd364cc5354ca8acbf741090cb88b2b2#datetime"
+           target="_blank" rel="noopener">
+            📅 Pedir cita con secretaría
+        </a>
+        <br>
+        <button class="btn-cerrar" onclick="cerrarModal()">Entendido</button>
+    </div>
+</div>
+
+<!-- Formulario de login -->
+<div class="login-container">
+    <div class="login-box">
+        <h1>Inicia sesión</h1>
+
+        <div th:if="${error}" class="alert alert-error">
+            <span th:text="${error}">Usuario o contraseña incorrectos</span>
+        </div>
+
+        <form th:action="@{/web/login}" method="post">
+            <div class="form-group">
+                <input type="email" id="email" name="email"
+                       placeholder="Email" required autocomplete="email">
+            </div>
+            <div class="form-group">
+                <input type="password" id="contrasenya" name="contrasenya"
+                       placeholder="Contraseña" required autocomplete="current-password">
+            </div>
+            <button type="submit" class="btn btn-primary btn-block">
+                Iniciar sesión
+            </button>
+        </form>
+
+        <p class="info-text">
+            Si no tienes usuario y contraseña, contacta al<br>
+            centro para que te proporcione las claves.
+        </p>
+    </div>
+</div>
+
+<script>
+    function abrirModal() {
+        document.getElementById('modalRegistro').classList.add('active');
+    }
+    function cerrarModal() {
+        document.getElementById('modalRegistro').classList.remove('active');
+    }
+    // Cerrar al hacer clic fuera del modal
+    document.getElementById('modalRegistro').addEventListener('click', function(e) {
+        if (e.target === this) cerrarModal();
+    });
+</script>
 </body>
 </html>

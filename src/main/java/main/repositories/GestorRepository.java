@@ -12,4 +12,5 @@ public interface GestorRepository extends JpaRepository<GestorRol, Integer> {
     Optional<GestorRol> findByEmailAndContrasenya(String email, String contrasenya);
     List<GestorRol> findByActivoTrue();
     Optional<GestorRol> findByEmailAndActivoTrue(String email);
+    List<GestorRol> findByIdEmpresaAndActivoTrue(Integer idEmpresa);
 }

@@ -1,0 +1,309 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mis Prácticas | Gestion@</title>
+    <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
+    <link rel="stylesheet" th:href="@{/css/alumno.css}">
+    <style>
+        .practicas-container {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .page-header {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            margin-bottom: 36px;
+        }
+
+        .btn-volver {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            color: #ff8c42;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            transition: gap 0.2s;
+        }
+        .btn-volver:hover { gap: 10px; }
+
+        .page-title {
+            font-size: 28px;
+            font-weight: 700;
+            color: #333;
+            margin: 0;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 80px 20px;
+            color: #aaa;
+        }
+        .empty-state svg { opacity: 0.3; margin-bottom: 16px; }
+        .empty-state p { font-size: 16px; }
+
+        .practica-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 6px 24px rgba(0,0,0,0.07);
+            margin-bottom: 28px;
+            overflow: hidden;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+        .practica-card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 32px rgba(255,140,66,0.15);
+        }
+
+        .practica-card-header {
+            padding: 20px 28px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .practica-card-header.preparada  { background: linear-gradient(135deg, #fff4ec, #ffe8d4); }
+        .practica-card-header.activa     { background: linear-gradient(135deg, #e8f8f0, #d0f0e0); }
+        .practica-card-header.finalizada { background: linear-gradient(135deg, #eaf4fc, #d0e8f8); }
+
+        .practica-empresa-nombre { font-size: 20px; font-weight: 700; color: #333; }
+        .practica-empresa-cif    { font-size: 13px; color: #888; margin-top: 2px; }
+
+        .estado-badge {
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: 700;
+            letter-spacing: 0.5px;
+            text-transform: uppercase;
+        }
+        .estado-badge.preparada  { background: #ffe8d4; color: #e67329; }
+        .estado-badge.activa     { background: #d0f0e0; color: #229954; }
+        .estado-badge.finalizada { background: #d0e8f8; color: #1a6fa8; }
+
+        .practica-card-body { padding: 24px 28px; }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 24px;
+        }
+        .info-item { display: flex; flex-direction: column; gap: 4px; }
+        .info-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.8px;
+            color: #aaa;
+        }
+        .info-value { font-size: 15px; font-weight: 600; color: #333; }
+        .info-value.secondary { font-size: 13px; font-weight: 400; color: #666; }
+
+        .divider { height: 1px; background: #f0f0f0; margin: 20px 0; }
+
+        .progress-section { margin-top: 4px; }
+        .progress-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        .progress-label { font-size: 13px; font-weight: 600; color: #555; }
+        .progress-numbers { font-size: 13px; color: #888; }
+        .progress-numbers strong { color: #333; font-weight: 700; }
+        .progress-track { height: 10px; background: #f0f0f0; border-radius: 5px; overflow: hidden; }
+        .progress-fill {
+            height: 100%;
+            border-radius: 5px;
+            background: linear-gradient(135deg, #ff8c42, #ffb366);
+            transition: width 0.6s ease;
+        }
+        .progress-fill.activa     { background: linear-gradient(135deg, #2ecc71, #58d68d); }
+        .progress-fill.finalizada { background: linear-gradient(135deg, #3498db, #5dade2); }
+        .progress-percent { font-size: 12px; color: #aaa; margin-top: 4px; text-align: right; }
+
+        .personas-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 20px;
+        }
+        .persona-card {
+            background: #fafafa;
+            border: 1px solid #f0f0f0;
+            border-radius: 12px;
+            padding: 14px 18px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .persona-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            font-size: 18px;
+        }
+        .persona-avatar.coordinador { background: #e8f8f0; }
+        .persona-avatar.gestor      { background: #fff4ec; }
+        .persona-info { flex: 1; min-width: 0; }
+        .persona-rol {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.6px;
+            color: #aaa;
+        }
+        .persona-nombre {
+            font-size: 14px;
+            font-weight: 600;
+            color: #333;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .sin-gestor { color: #bbb; font-style: italic; font-size: 13px; }
+
+        @media (max-width: 640px) {
+            .personas-grid { grid-template-columns: 1fr; }
+            .info-grid { grid-template-columns: 1fr 1fr; }
+            .practica-card-header { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+<nav class="navbar-alumno">
+    <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
+    <div class="nav-menu">
+        <a th:href="@{/web/alumno/practicas}" class="nav-link active">Consulta prácticas</a>
+        <a href="#" class="nav-link">Subir documentación</a>
+        <a href="#" class="nav-link">Registrar horas</a>
+        <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
+    </div>
+</nav>
+
+<div class="practicas-container">
+
+    <div class="page-header">
+        <a th:href="@{/web/inicioAlumno}" class="btn-volver">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="15 18 9 12 15 6"></polyline>
+            </svg>
+            Volver
+        </a>
+        <h1 class="page-title">Mis prácticas</h1>
+    </div>
+
+    <!-- Sin prácticas -->
+    <div th:if="${#lists.isEmpty(practicas)}" class="empty-state">
+        <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="#ccc" stroke-width="1.5">
+            <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+            <line x1="8" y1="21" x2="16" y2="21"></line>
+            <line x1="12" y1="17" x2="12" y2="21"></line>
+        </svg>
+        <p>No tienes prácticas asignadas aún.</p>
+    </div>
+
+    <!-- Lista de prácticas -->
+    <div th:each="practica : ${practicas}">
+        <div class="practica-card">
+
+            <!-- Cabecera -->
+            <div class="practica-card-header"
+                 th:classappend="${#strings.toLowerCase(practica.estado.name())}">
+                <div>
+                    <div class="practica-empresa-nombre" th:text="${practica.empresa.nombre}"></div>
+                    <div class="practica-empresa-cif" th:text="'CIF: ' + ${practica.empresa.cif}"></div>
+                </div>
+                <span class="estado-badge"
+                      th:classappend="${#strings.toLowerCase(practica.estado.name())}"
+                      th:text="${practica.estado}">
+                </span>
+            </div>
+
+            <!-- Cuerpo -->
+            <div class="practica-card-body">
+
+                <div class="info-grid">
+                    <div class="info-item">
+                        <span class="info-label">Empresa</span>
+                        <span class="info-value" th:text="${practica.empresa.nombre}"></span>
+                        <span class="info-value secondary" th:text="${practica.empresa.direccion}"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Fecha de inicio</span>
+                        <span class="info-value" th:text="${practica.fechaInicio}"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Fecha de fin</span>
+                        <span class="info-value" th:text="${practica.fechaFin}"></span>
+                    </div>
+                    <div class="info-item">
+                        <span class="info-label">Horas totales</span>
+                        <span class="info-value" th:text="${practica.horasTotales} + ' h'"></span>
+                    </div>
+                </div>
+
+                <!-- Progreso -->
+                <div class="progress-section">
+                    <div class="progress-header">
+                        <span class="progress-label">Progreso de horas</span>
+                        <span class="progress-numbers">
+                            <strong th:text="${practica.horasHechas}"></strong>
+                            <span th:text="' / ' + ${practica.horasTotales} + ' h'"></span>
+                        </span>
+                    </div>
+                    <div class="progress-track">
+                        <div class="progress-fill"
+                             th:classappend="${#strings.toLowerCase(practica.estado.name())}"
+                             th:style="'width: ' + (${practica.horasTotales > 0} ? ${practica.horasHechas * 100 / practica.horasTotales} : 0) + '%'">
+                        </div>
+                    </div>
+                    <div class="progress-percent"
+                         th:text="${practica.horasTotales > 0} ? (${practica.horasHechas * 100 / practica.horasTotales} + '%') : '0%'">
+                    </div>
+                </div>
+
+                <div class="divider"></div>
+
+                <!-- Coordinador y gestor (sin DNI) -->
+                <div class="personas-grid">
+                    <div class="persona-card">
+                        <div class="persona-avatar coordinador">👨‍🏫</div>
+                        <div class="persona-info">
+                            <div class="persona-rol">Coordinador</div>
+                            <div class="persona-nombre"
+                                 th:text="${practica.coordinador.nombre + ' ' + practica.coordinador.apellidos}">
+                            </div>
+                        </div>
+                    </div>
+                    <div class="persona-card">
+                        <div class="persona-avatar gestor">👔</div>
+                        <div class="persona-info">
+                            <div class="persona-rol">Gestor de empresa</div>
+                            <div th:if="${gestoresPorPractica[practica.idPractica] != null}">
+                                <div class="persona-nombre"
+                                     th:text="${gestoresPorPractica[practica.idPractica].nombre + ' ' + gestoresPorPractica[practica.idPractica].apellidos}">
+                                </div>
+                            </div>
+                            <div th:if="${gestoresPorPractica[practica.idPractica] == null}"
+                                 class="sin-gestor">Sin gestor asignado</div>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

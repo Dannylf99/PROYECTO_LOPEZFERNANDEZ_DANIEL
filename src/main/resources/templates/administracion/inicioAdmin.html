@@ -4,108 +4,107 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio - Administración | Gestion@</title>
-    
-    <!-- CSS GLOBAL -->
+
     <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
-    
-    <!-- CSS ESPECÍFICO ADMINISTRACIÓN -->
     <link rel="stylesheet" th:href="@{/css/administracion.css}">
 </head>
 <body>
-    <!-- Barra de navegación AZUL -->
-    <nav class="navbar-administracion">
-        <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
-        <div class="nav-menu">
-            <a th:href="@{/admin/usuarios}" class="nav-link">Usuarios</a>
-            <a href="#" class="nav-link">Documentación</a>
-            <a href="#" class="nav-link">Informes</a>
-            <a href="#" class="nav-link">Alumnos</a>
-            <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
+<nav class="navbar-administracion">
+    <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
+    <div class="nav-menu">
+        <a th:href="@{/admin/usuarios}" class="nav-link">Usuarios</a>
+        <a th:href="@{/admin/practicas}" class="nav-link">Prácticas</a>
+        <a th:href="@{/admin/empresas}" class="nav-link">Empresas</a>
+        <a href="#" class="nav-link">Documentación</a>
+        <a href="#" class="nav-link">Informes</a>
+        <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
+    </div>
+</nav>
+
+<div class="container-administracion">
+    <div class="layout-two-columns">
+
+        <div class="column-left">
+            <div class="welcome-section">
+                <h1 class="welcome-title">Bienvenido, <span th:text="${usuario.nombre}">NOMBRE</span></h1>
+                <p class="welcome-text">
+                    Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae legendos at vix ad putent delectus
+                    delicata usu. Vidit dissentiet eos cu eum brute copiosae hendrerit. Eos erant dolorum an. Per facer affert ut.
+                </p>
+                <div class="notifications-box">
+                    <p>Tienes <strong>x notificaciones</strong>. Pulsa <a href="#" class="link-notif">aquí</a> para acceder a ellas.</p>
+                </div>
+            </div>
         </div>
-    </nav>
 
-    <!-- Contenido principal - LAYOUT 2 COLUMNAS -->
-    <div class="container-administracion">
-        <div class="layout-two-columns">
-            
-            <!-- COLUMNA IZQUIERDA: Bienvenida -->
-            <div class="column-left">
-                <div class="welcome-section">
-                    <h1 class="welcome-title">Bienvenido, <span th:text="${usuario.nombre}">NOMBRE</span></h1>
-                    <p class="welcome-text">
-                        Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae legendos at vix ad putent delectus 
-                        delicata usu. Vidit dissentiet eos cu eum brute copiosae hendrerit. Eos erant dolorum an. Per facer affert ut.
-                    </p>
-                    <div class="notifications-box">
-                        <p>Tienes <strong>x notificaciones</strong>. Pulsa <a href="#" class="link-notif">aquí</a> para acceder a ellas.</p>
-                    </div>
+        <div class="column-right">
+
+            <div class="action-card">
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="9" cy="7" r="4"></circle>
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                    </svg>
                 </div>
+                <h3 class="card-title">Gestionar usuarios</h3>
+                <p class="card-description">Crear, editar y dar de baja usuarios del sistema: alumnos, coordinadores, gestores y administradores.</p>
+                <a th:href="@{/admin/usuarios}" class="card-button">Gestionar →</a>
             </div>
 
-            <!-- COLUMNA DERECHA: Tarjetas apiladas -->
-            <div class="column-right">
-                <!-- Tarjeta 1: Gestionar usuarios -->
-                <div class="action-card">
-                    <div class="card-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <circle cx="12" cy="12" r="10"></circle>
-                            <path d="M12 6v6l4 2"></path>
-                        </svg>
-                    </div>
-                    <h3 class="card-title">Gestionar usuarios</h3>
-                    <p class="card-description">
-                        Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae.
-                    </p>
-                    <a th:href="@{/admin/usuarios}" class="card-button">Gestionar →</a>
+            <div class="action-card">
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="3" width="20" height="14" rx="2" ry="2"></rect>
+                        <line x1="8" y1="21" x2="16" y2="21"></line>
+                        <line x1="12" y1="17" x2="12" y2="21"></line>
+                    </svg>
                 </div>
-
-                <!-- Tarjeta 2: Gestionar documentación -->
-                <div class="action-card">
-                    <div class="card-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                            <polyline points="17 8 12 3 7 8"></polyline>
-                            <line x1="12" y1="3" x2="12" y2="15"></line>
-                        </svg>
-                    </div>
-                    <h3 class="card-title">Gestionar documentación</h3>
-                    <p class="card-description">
-                        Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae.
-                    </p>
-                    <a href="#" class="card-button">Gestionar →</a>
-                </div>
-
-                <!-- Tarjeta 3: Informes -->
-                <div class="action-card">
-                    <div class="card-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="M3 3v18h18"></path>
-                            <path d="M7 14l4-4 4 4 6-6"></path>
-                        </svg>
-                    </div>
-                    <h3 class="card-title">Informes</h3>
-                    <p class="card-description">
-                        Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae.
-                    </p>
-                    <a href="#" class="card-button">Ver informes →</a>
-                </div>
-
-                <!-- Tarjeta 4: Gestionar alumnos -->
-                <div class="action-card">
-                    <div class="card-icon">
-                        <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"></polygon>
-                        </svg>
-                    </div>
-                    <h3 class="card-title">Gestionar alumnos</h3>
-                    <p class="card-description">
-                        Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae.
-                    </p>
-                    <a href="#" class="card-button">Gestionar →</a>
-                </div>
+                <h3 class="card-title">Gestionar prácticas</h3>
+                <p class="card-description">Crear y gestionar prácticas asignando alumnos, coordinadores y empresas.</p>
+                <a th:href="@{/admin/practicas}" class="card-button">Gestionar →</a>
             </div>
-            
+
+            <div class="action-card">
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                        <polyline points="9 22 9 12 15 12 15 22"></polyline>
+                    </svg>
+                </div>
+                <h3 class="card-title">Gestionar empresas</h3>
+                <p class="card-description">Registrar y consultar las empresas colaboradoras en el sistema de prácticas.</p>
+                <a th:href="@{/admin/empresas}" class="card-button">Gestionar →</a>
+            </div>
+
+            <div class="action-card">
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                        <polyline points="17 8 12 3 7 8"></polyline>
+                        <line x1="12" y1="3" x2="12" y2="15"></line>
+                    </svg>
+                </div>
+                <h3 class="card-title">Gestionar documentación</h3>
+                <p class="card-description">Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae.</p>
+                <a href="#" class="card-button">Gestionar →</a>
+            </div>
+
+            <div class="action-card">
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 3v18h18"></path>
+                        <path d="M7 14l4-4 4 4 6-6"></path>
+                    </svg>
+                </div>
+                <h3 class="card-title">Informes</h3>
+                <p class="card-description">Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae.</p>
+                <a href="#" class="card-button">Ver informes →</a>
+            </div>
+
         </div>
     </div>
+</div>
 </body>
 </html>

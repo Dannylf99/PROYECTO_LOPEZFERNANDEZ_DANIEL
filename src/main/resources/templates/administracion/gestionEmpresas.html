@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gestión de Usuarios | Gestion@</title>
+    <title>Gestión de Empresas | Gestion@</title>
     <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
     <link rel="stylesheet" th:href="@{/css/administracion.css}">
     <link rel="stylesheet" th:href="@{/css/gestion-usuarios.css}">
@@ -21,15 +21,16 @@
         th.sortable.asc .sort-icon::after { content: ' ▲'; opacity: 1; font-size: 11px; }
         th.sortable.desc .sort-icon::after { content: ' ▼'; opacity: 1; font-size: 11px; }
         .empty-table { text-align: center; color: #888; padding: 24px; }
+        .sin-gestor { color: #aaa; font-style: italic; font-size: 13px; }
     </style>
 </head>
 <body>
 <nav class="navbar-administracion">
     <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
-        <a th:href="@{/admin/usuarios}" class="nav-link active">Usuarios</a>
+        <a th:href="@{/admin/usuarios}" class="nav-link">Usuarios</a>
         <a th:href="@{/admin/practicas}" class="nav-link">Prácticas</a>
-        <a th:href="@{/admin/empresas}" class="nav-link">Empresas</a>
+        <a th:href="@{/admin/empresas}" class="nav-link active">Empresas</a>
         <a href="#" class="nav-link">Documentación</a>
         <a href="#" class="nav-link">Informes</a>
         <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
@@ -38,15 +39,19 @@
 <div class="container-administracion">
     <div class="page-header">
         <div>
-            <h1 class="page-title">Gestión de Usuarios</h1>
-            <p class="page-subtitle">Lista de todos los usuarios registrados en el sistema</p>
+            <a th:href="@{/web/inicioAdministracion}" class="btn-volver">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="15 18 9 12 15 6"></polyline></svg>
+                Volver al inicio
+            </a>
+            <h1 class="page-title" style="margin-top: 10px;">Gestión de Empresas</h1>
+            <p class="page-subtitle">Lista de todas las empresas registradas en el sistema</p>
         </div>
-        <a th:href="@{/admin/usuarios/nuevo}" class="btn-nuevo-usuario">
+        <a th:href="@{/admin/empresas/nueva}" class="btn-nuevo-usuario">
             <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <line x1="12" y1="5" x2="12" y2="19"></line>
                 <line x1="5" y1="12" x2="19" y2="12"></line>
             </svg>
-            Nuevo usuario
+            Nueva empresa
         </a>
     </div>
     <div th:if="${mensajeExito}" class="alert alert-success" th:text="${mensajeExito}"></div>
@@ -55,44 +60,50 @@
         <input type="text" id="searchInput" placeholder="Buscar..." onkeydown="if(event.key==='Enter') filtrarTabla()">
         <select id="searchField">
             <option value="all">Todos los campos</option>
-            <option value="0">DNI</option>
-            <option value="1">Nombre</option>
-            <option value="2">Apellidos</option>
-            <option value="3">Email</option>
-            <option value="4">Tipo</option>
+            <option value="0">Nombre</option>
+            <option value="1">CIF</option>
+            <option value="2">Dirección</option>
+            <option value="3">Gestor</option>
+            <option value="4">DNI Gestor</option>
         </select>
         <button onclick="filtrarTabla()">Buscar</button>
     </div>
     <p id="contadorResultados" style="margin-top: -8px; margin-bottom: 10px; font-size: 13px; color: #888;"></p>
     <div class="table-wrapper">
-        <table class="users-table" id="usuariosTable">
+        <table class="users-table" id="empresasTable">
             <thead>
             <tr>
-                <th class="sortable" onclick="ordenarTabla(0)">DNI<span class="sort-icon"></span></th>
-                <th class="sortable" onclick="ordenarTabla(1)">Nombre<span class="sort-icon"></span></th>
-                <th class="sortable" onclick="ordenarTabla(2)">Apellidos<span class="sort-icon"></span></th>
-                <th class="sortable" onclick="ordenarTabla(3)">Email<span class="sort-icon"></span></th>
-                <th class="sortable" onclick="ordenarTabla(4)">Tipo<span class="sort-icon"></span></th>
+                <th class="sortable" onclick="ordenarTabla(0)">Nombre<span class="sort-icon"></span></th>
+                <th class="sortable" onclick="ordenarTabla(1)">CIF<span class="sort-icon"></span></th>
+                <th class="sortable" onclick="ordenarTabla(2)">Dirección<span class="sort-icon"></span></th>
+                <th class="sortable" onclick="ordenarTabla(3)">Gestor<span class="sort-icon"></span></th>
+                <th class="sortable" onclick="ordenarTabla(4)">DNI Gestor<span class="sort-icon"></span></th>
                 <th>Acciones</th>
             </tr>
             </thead>
-            <tbody id="usuariosBody">
-            <tr th:each="usuario : ${usuarios}">
-                <td th:text="${usuario.dni}"></td>
-                <td th:text="${usuario.nombre}"></td>
-                <td th:text="${usuario.apellidos}"></td>
-                <td th:text="${usuario.email}"></td>
-                <td><span class="badge" th:classappend="'badge-' + ${#strings.toLowerCase(usuario.tipo)}" th:text="${usuario.tipo}"></span></td>
+            <tbody id="empresasBody">
+            <tr th:each="empresa : ${empresas}">
+                <td th:text="${empresa.nombre}"></td>
+                <td th:text="${empresa.cif}"></td>
+                <td th:text="${empresa.direccion}"></td>
+                <td>
+                    <span th:if="${gestoresPorEmpresa[empresa.idEmpresa] != null}"
+                          th:text="${gestoresPorEmpresa[empresa.idEmpresa].nombre + ' ' + gestoresPorEmpresa[empresa.idEmpresa].apellidos}">
+                    </span>
+                    <span th:if="${gestoresPorEmpresa[empresa.idEmpresa] == null}" class="sin-gestor">Sin gestor</span>
+                </td>
+                <td>
+                    <span th:if="${gestoresPorEmpresa[empresa.idEmpresa] != null}"
+                          th:text="${gestoresPorEmpresa[empresa.idEmpresa].dni}">
+                    </span>
+                    <span th:if="${gestoresPorEmpresa[empresa.idEmpresa] == null}" class="sin-gestor">—</span>
+                </td>
                 <td class="actions-cell">
-                    <a th:href="@{/admin/usuarios/editar/{id}(id=${usuario.id}, tipo=${usuario.tipo})}" class="btn-action btn-edit">Editar</a>
-                    <form th:action="@{/admin/usuarios/eliminar/{id}(id=${usuario.id})}" method="post" style="display:inline;" onsubmit="return confirm('¿Seguro que quieres dar de baja a este usuario?')">
-                        <input type="hidden" name="tipo" th:value="${usuario.tipo}"/>
-                        <button type="submit" class="btn-action btn-delete">Eliminar</button>
-                    </form>
+                    <a th:href="@{/admin/empresas/editar/{id}(id=${empresa.idEmpresa})}" class="btn-action btn-edit">Editar</a>
                 </td>
             </tr>
-            <tr th:if="${#lists.isEmpty(usuarios)}">
-                <td colspan="6" class="empty-table">No hay usuarios registrados</td>
+            <tr th:if="${#lists.isEmpty(empresas)}">
+                <td colspan="6" class="empty-table">No hay empresas registradas</td>
             </tr>
             </tbody>
         </table>
@@ -103,7 +114,7 @@
     function filtrarTabla() {
         const query = document.getElementById('searchInput').value.toLowerCase().trim();
         const campo = document.getElementById('searchField').value;
-        const filas = Array.from(document.querySelectorAll('#usuariosBody tr'));
+        const filas = Array.from(document.querySelectorAll('#empresasBody tr'));
         let visibles = 0;
         filas.forEach(fila => {
             const celdas = fila.querySelectorAll('td');
@@ -114,13 +125,13 @@
             if (visible) visibles++;
         });
         const total = filas.filter(f => f.querySelectorAll('td').length > 1).length;
-        document.getElementById('contadorResultados').textContent = query ? `Mostrando ${visibles} de ${total} usuarios` : '';
+        document.getElementById('contadorResultados').textContent = query ? `Mostrando ${visibles} de ${total} empresas` : '';
     }
     function ordenarTabla(col) {
         document.querySelectorAll('th.sortable').forEach(h => h.classList.remove('asc', 'desc'));
         if (sortCol === col) { sortAsc = !sortAsc; } else { sortCol = col; sortAsc = true; }
         document.querySelectorAll('th.sortable')[col].classList.add(sortAsc ? 'asc' : 'desc');
-        const tbody = document.getElementById('usuariosBody');
+        const tbody = document.getElementById('empresasBody');
         const filas = Array.from(tbody.querySelectorAll('tr')).filter(f => f.querySelectorAll('td').length > 1);
         filas.sort((a, b) => { const ca = a.querySelectorAll('td')[col]?.innerText.trim() || ''; const cb = b.querySelectorAll('td')[col]?.innerText.trim() || ''; return sortAsc ? ca.localeCompare(cb, 'es') : cb.localeCompare(ca, 'es'); });
         filas.forEach(f => tbody.appendChild(f));
