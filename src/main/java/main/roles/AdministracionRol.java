@@ -13,7 +13,7 @@ public class AdministracionRol extends Usuario {
         super();
     }
 
-    // Constructor completo (ACTUALIZADO con DNI)
+    // Constructor completo
     public AdministracionRol(int idUsuario, String nombre, String apellidos, String dni, String email, String contrasenya) {
         super(idUsuario, nombre, apellidos, dni, email, contrasenya);
     }
