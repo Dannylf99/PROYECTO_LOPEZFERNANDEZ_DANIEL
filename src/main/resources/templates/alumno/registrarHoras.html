@@ -65,7 +65,7 @@
     <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
         <a th:href="@{/web/alumno/practicas}" class="nav-link">Consulta prácticas</a>
-        <a href="#" class="nav-link">Subir documentación</a>
+        <a th:href="@{/web/documentos/alumno}" class="nav-link">Documentación</a>
         <a th:href="@{/web/alumno/horas}" class="nav-link active">Registrar horas</a>
         <a th:href="@{/web/alumno/notificaciones}" class="nav-link">
             🔔 <span th:if="${notificacionesNoLeidas > 0}"

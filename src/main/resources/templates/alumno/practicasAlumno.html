@@ -184,8 +184,13 @@
     <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
         <a th:href="@{/web/alumno/practicas}" class="nav-link active">Consulta prácticas</a>
-        <a href="#" class="nav-link">Subir documentación</a>
-        <a href="#" class="nav-link">Registrar horas</a>
+        <a th:href="@{/web/documentos/alumno}" class="nav-link">Documentación</a>
+        <a th:href="@{/web/alumno/horas}" class="nav-link active">Registrar horas</a>
+        <a th:href="@{/web/alumno/notificaciones}" class="nav-link active">
+            🔔 <span th:if="${notificacionesNoLeidas > 0}"
+                    th:text="'(' + ${notificacionesNoLeidas} + ')'"
+                    style="color:#ff8c42; font-weight:700;"></span>
+        </a>
         <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
     </div>
 </nav>
