@@ -12,7 +12,7 @@
     <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
         <a th:href="@{/web/alumno/practicas}" class="nav-link">Consulta prácticas</a>
-        <a href="#" class="nav-link">Subir documentación</a>
+        <a th:href="@{/web/documentos/alumno}" class="nav-link">Documentación</a>
         <a th:href="@{/web/alumno/horas}" class="nav-link">Registrar horas</a>
         <a th:href="@{/web/alumno/notificaciones}" class="nav-link">
             🔔 <span th:if="${notificacionesNoLeidas > 0}"
@@ -66,9 +66,9 @@
                             <line x1="12" y1="3" x2="12" y2="15"></line>
                         </svg>
                     </div>
-                    <h3 class="card-title">Subir documentación</h3>
-                    <p class="card-description">Sube los documentos requeridos para tus prácticas.</p>
-                    <a href="#" class="card-button">Subir documentos →</a>
+                    <h3 class="card-title">Documentación</h3>
+                    <p class="card-description">Sube tu convenio y memoria final, fírmalos y consulta el estado de cada documento.</p>
+                    <a th:href="@{/web/documentos/alumno}" class="card-button">Ver documentos →</a>
                 </div>
 
                 <div class="action-card">

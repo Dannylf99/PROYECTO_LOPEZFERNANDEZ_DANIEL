@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generar informes | Gestion@</title>
+    <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
+    <link rel="stylesheet" th:href="@{/css/administracion.css}">
+    <link rel="stylesheet" th:href="@{/css/coordinador.css}">
+    <link rel="stylesheet" th:href="@{/css/informes.css}">
+</head>
+<body>
+
+<nav th:class="${rol == 'ADMINISTRACION'} ? 'navbar-administracion' : 'navbar-coordinador'">
+    <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
+    <div class="nav-menu">
+
+        <th:block th:if="${rol == 'ADMINISTRACION'}">
+            <a th:href="@{/admin/usuarios}" class="nav-link">Usuarios</a>
+            <a th:href="@{/admin/practicas}" class="nav-link">Prácticas</a>
+            <a th:href="@{/admin/empresas}" class="nav-link">Empresas</a>
+            <a href="#" class="nav-link">Documentación</a>
+            <a th:href="@{/web/informes/seleccion}" class="nav-link nav-link-active">Informes</a>
+        </th:block>
+
+        <th:block th:if="${rol == 'COORDINADOR'}">
+            <a href="#" class="nav-link">Alumnos</a>
+            <a href="#" class="nav-link">Seguimiento</a>
+            <a th:href="@{/web/coordinador/validarHoras}" class="nav-link">Validar horas</a>
+            <a href="#" class="nav-link">Evaluaciones</a>
+            <a th:href="@{/web/informes/seleccion}" class="nav-link nav-link-active">Informes</a>
+        </th:block>
+
+        <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
+    </div>
+</nav>
+
+<div th:class="${rol == 'ADMINISTRACION'} ? 'container-administracion' : 'container-coordinador'">
+
+    <div class="informes-header">
+        <h1 class="informes-title">Generar informes</h1>
+        <p class="informes-subtitle">Selecciona el tipo de informe y aplica los filtros que necesites antes de generarlo.</p>
+    </div>
+
+    <!-- Mensaje de error si viene alguno -->
+    <div class="informes-error" th:if="${error}" th:text="${error}"></div>
+
+    <!-- INFORME 1: Listado de alumnos -->
+    <div class="informe-card">
+        <div class="informe-card-header">
+            <div class="informe-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="9" cy="7" r="4"></circle>
+                    <path d="M23 21v-2a4 4 0 0 0-3-3.87"></path>
+                    <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                </svg>
+            </div>
+            <div>
+                <h2 class="informe-title">Listado de alumnos</h2>
+                <p class="informe-desc">Listado de todos los alumnos con su estado de prácticas actual.</p>
+            </div>
+        </div>
+        <form th:action="@{/web/informes/alumnos}" method="get" class="informe-filtros">
+            <div class="filtros-grid">
+                <div class="filtro-group">
+                    <label class="filtro-label">Curso</label>
+                    <select name="curso" class="filtro-select">
+                        <option value="">Todos</option>
+                        <option value="DAW">DAW</option>
+                        <option value="DAM">DAM</option>
+                    </select>
+                </div>
+                <div class="filtro-group">
+                    <label class="filtro-label">Estado prácticas</label>
+                    <select name="estado" class="filtro-select">
+                        <option value="">Todos</option>
+                        <option value="PREPARADA">Preparada</option>
+                        <option value="ACTIVA">Activa</option>
+                        <option value="PARADA">Parada</option>
+                        <option value="FINALIZADA">Finalizada</option>
+                        <option value="CANCELADA">Cancelada</option>
+                    </select>
+                </div>
+                <div class="filtro-group">
+                    <label class="filtro-label">Fecha inicio desde</label>
+                    <input type="date" name="fechaDesde" class="filtro-input">
+                </div>
+                <div class="filtro-group">
+                    <label class="filtro-label">Fecha inicio hasta</label>
+                    <input type="date" name="fechaHasta" class="filtro-input">
+                </div>
+            </div>
+            <button type="submit" class="btn-generar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Descargar PDF
+            </button>
+        </form>
+    </div>
+
+    <!-- INFORME 2: Registro de horas -->
+    <div class="informe-card">
+        <div class="informe-card-header">
+            <div class="informe-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <circle cx="12" cy="12" r="10"></circle>
+                    <path d="M12 6v6l4 2"></path>
+                </svg>
+            </div>
+            <div>
+                <h2 class="informe-title">Registro de horas por alumno</h2>
+                <p class="informe-desc">Detalle de las horas registradas y validadas de un alumno concreto.</p>
+            </div>
+        </div>
+        <form th:action="@{/web/informes/horas}" method="get" class="informe-filtros">
+            <div class="filtros-grid">
+                <div class="filtro-group">
+                    <label class="filtro-label">Alumno</label>
+                    <select name="idAlumno" class="filtro-select" required>
+                        <option value="">Selecciona un alumno</option>
+                        <option th:each="alumno : ${alumnos}"
+                                th:value="${alumno.idUsuario}"
+                                th:text="${alumno.nombre + ' ' + alumno.apellidos}">
+                        </option>
+                    </select>
+                </div>
+                <div class="filtro-group">
+                    <label class="filtro-label">Estado horas</label>
+                    <select name="estadoHoras" class="filtro-select">
+                        <option value="">Todos</option>
+                        <option value="PENDIENTE">Pendiente</option>
+                        <option value="VALIDADA">Validada</option>
+                        <option value="RECHAZADA">Rechazada</option>
+                    </select>
+                </div>
+                <div class="filtro-group">
+                    <label class="filtro-label">Fecha desde</label>
+                    <input type="date" name="fechaDesde" class="filtro-input">
+                </div>
+                <div class="filtro-group">
+                    <label class="filtro-label">Fecha hasta</label>
+                    <input type="date" name="fechaHasta" class="filtro-input">
+                </div>
+            </div>
+            <button type="submit" class="btn-generar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Descargar PDF
+            </button>
+        </form>
+    </div>
+
+    <!-- INFORME 3: General de prácticas -->
+    <div class="informe-card">
+        <div class="informe-card-header">
+            <div class="informe-icon">
+                <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M3 3v18h18"></path>
+                    <path d="M7 14l4-4 4 4 6-6"></path>
+                </svg>
+            </div>
+            <div>
+                <h2 class="informe-title">Informe general de prácticas</h2>
+                <p class="informe-desc">Visión global de todas las prácticas registradas en el sistema con sus datos principales.</p>
+            </div>
+        </div>
+        <form th:action="@{/web/informes/general}" method="get" class="informe-filtros">
+            <div class="filtros-grid">
+                <div class="filtro-group">
+                    <label class="filtro-label">Curso</label>
+                    <select name="curso" class="filtro-select">
+                        <option value="">Todos</option>
+                        <option value="DAW">DAW</option>
+                        <option value="DAM">DAM</option>
+                    </select>
+                </div>
+                <div class="filtro-group">
+                    <label class="filtro-label">Estado prácticas</label>
+                    <select name="estado" class="filtro-select">
+                        <option value="">Todos</option>
+                        <option value="PREPARADA">Preparada</option>
+                        <option value="ACTIVA">Activa</option>
+                        <option value="PARADA">Parada</option>
+                        <option value="FINALIZADA">Finalizada</option>
+                        <option value="CANCELADA">Cancelada</option>
+                    </select>
+                </div>
+                <div class="filtro-group">
+                    <label class="filtro-label">Fecha inicio desde</label>
+                    <input type="date" name="fechaDesde" class="filtro-input">
+                </div>
+                <div class="filtro-group">
+                    <label class="filtro-label">Fecha inicio hasta</label>
+                    <input type="date" name="fechaHasta" class="filtro-input">
+                </div>
+            </div>
+            <button type="submit" class="btn-generar">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                    <polyline points="17 8 12 3 7 8"></polyline>
+                    <line x1="12" y1="3" x2="12" y2="15"></line>
+                </svg>
+                Descargar PDF
+            </button>
+        </form>
+    </div>
+
+</div>
+</body>
+</html>

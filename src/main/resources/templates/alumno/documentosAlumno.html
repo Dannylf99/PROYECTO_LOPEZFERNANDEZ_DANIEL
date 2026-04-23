@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Documentación | Gestion@</title>
+    <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
+    <link rel="stylesheet" th:href="@{/css/administracion.css}">
+    <link rel="stylesheet" th:href="@{/css/documentos.css}">
+</head>
+<body>
+<nav class="navbar-administracion">
+    <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
+    <div class="nav-menu">
+        <a th:href="@{/web/inicioAlumno}" class="nav-link">Inicio</a>
+        <a th:href="@{/web/alumno/practicas}" class="nav-link">Prácticas</a>
+        <a th:href="@{/web/documentos/alumno}" class="nav-link nav-link-active">Documentación</a>
+        <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
+    </div>
+</nav>
+
+<div class="container-administracion">
+
+    <div class="doc-header">
+        <h1 class="doc-title">Mi documentación</h1>
+        <p class="doc-subtitle">Sube, firma y consulta el estado de tus documentos de prácticas.</p>
+    </div>
+
+    <!-- Formulario subida -->
+    <div class="doc-card">
+        <h2 class="doc-section-title">Subir nuevo documento</h2>
+        <form th:action="@{/web/documentos/alumno/subir}" method="post"
+              enctype="multipart/form-data" class="doc-form">
+            <div class="doc-form-grid">
+                <div class="doc-form-group">
+                    <label>Tipo de documento</label>
+                    <select name="tipo" class="doc-select" required>
+                        <option value="CONVENIO">Convenio de prácticas</option>
+                        <option value="MEMORIA_FINAL">Memoria final</option>
+                    </select>
+                </div>
+                <div class="doc-form-group">
+                    <label>Práctica</label>
+                    <input type="number" name="idPractica"
+                           th:value="${usuario.empresaAsignada}" hidden>
+                    <p class="doc-hint">Se asocia a tu práctica activa automáticamente.</p>
+                </div>
+                <div class="doc-form-group">
+                    <label>Archivo PDF</label>
+                    <input type="file" name="archivo" accept=".pdf" required class="doc-file">
+                </div>
+            </div>
+            <button type="submit" class="btn-doc-primary">Subir documento</button>
+        </form>
+    </div>
+
+    <!-- Listado de documentos -->
+    <div class="doc-card">
+        <h2 class="doc-section-title">Mis documentos</h2>
+        <div th:if="${#lists.isEmpty(documentos)}" class="doc-empty">
+            No tienes documentos subidos aún.
+        </div>
+        <div class="doc-table-wrap" th:unless="${#lists.isEmpty(documentos)}">
+            <table class="doc-table">
+                <thead>
+                <tr>
+                    <th>Tipo</th>
+                    <th>Fecha subida</th>
+                    <th>Estado</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="doc : ${documentos}">
+                    <td th:text="${doc.tipo.name().replace('_',' ')}"></td>
+                    <td th:text="${#temporals.format(doc.fechaSubida,'dd/MM/yyyy HH:mm')}"></td>
+                    <td>
+                            <span class="doc-badge"
+                                  th:classappend="${doc.estado.name()}"
+                                  th:text="${doc.estado.name().replace('_',' ')}">
+                            </span>
+                    </td>
+                    <td class="doc-acciones">
+                        <!-- Descargar siempre -->
+                        <a th:href="@{/web/documentos/descargar/{id}(id=${doc.idDocumento})}"
+                           class="btn-doc-sm btn-doc-download">Descargar</a>
+                        <!-- Firmar si está pendiente firma alumno -->
+                        <form th:if="${doc.estado.name() == 'PENDIENTE_FIRMA_ALUMNO'}"
+                              th:action="@{/web/documentos/alumno/firmar/{id}(id=${doc.idDocumento})}"
+                              method="post" style="display:inline">
+                            <button type="submit" class="btn-doc-sm btn-doc-sign">Firmar</button>
+                        </form>
+                        <!-- Resubir si rechazado -->
+                        <form th:if="${doc.estado.name() == 'RECHAZADO'}"
+                              th:action="@{/web/documentos/alumno/resubir/{id}(id=${doc.idDocumento})}"
+                              method="post" enctype="multipart/form-data" style="display:inline">
+                            <input type="file" name="archivo" accept=".pdf" required
+                                   class="doc-file-inline">
+                            <button type="submit" class="btn-doc-sm btn-doc-resubir">Resubir</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

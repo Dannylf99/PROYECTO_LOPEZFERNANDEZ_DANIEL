@@ -1,0 +1,184 @@
+/* ===================================
+   PÁGINA DE INFORMES
+   =================================== */
+
+.informes-header {
+    margin-bottom: 2rem;
+}
+
+.informes-title {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--color-texto);
+    margin-bottom: 0.4rem;
+}
+
+.informes-subtitle {
+    font-size: 0.95rem;
+    color: var(--color-gris);
+}
+
+.informes-error {
+    background-color: #f8d7da;
+    color: var(--color-error);
+    border: 1px solid var(--color-error);
+    border-radius: 8px;
+    padding: 0.75rem 1rem;
+    margin-bottom: 1.5rem;
+    font-size: 0.9rem;
+}
+
+/* ===================================
+   TARJETAS DE INFORME
+   =================================== */
+.informe-card {
+    background: white;
+    border: 2px solid transparent;
+    border-radius: 15px;
+    padding: 30px;
+    margin-bottom: 25px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.08);
+    transition: all 0.3s ease;
+}
+
+.informe-card:hover {
+    transform: translateX(10px);
+    border-color: var(--color-admin-primario);
+    box-shadow: 0 8px 30px rgba(52, 152, 219, 0.25);
+}
+
+.informe-card-header {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.informe-icon {
+    flex-shrink: 0;
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, #3498db 0%, #5dade2 100%);
+    border-radius: 15px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    box-shadow: 0 5px 15px rgba(52, 152, 219, 0.3);
+}
+
+.informe-title {
+    font-size: 22px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.informe-desc {
+    font-size: 15px;
+    color: #666;
+    line-height: 1.6;
+}
+
+/* ===================================
+   FILTROS
+   =================================== */
+.informe-filtros {
+    border-top: 1px solid #eee;
+    padding-top: 1.25rem;
+}
+
+.filtros-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+}
+
+.filtro-group {
+    display: flex;
+    flex-direction: column;
+    gap: 0.35rem;
+}
+
+.filtro-label {
+    font-size: 0.8rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.04em;
+    color: var(--color-gris);
+    margin-bottom: 0;
+}
+
+/* Heredamos los estilos globales de input/select,
+   solo sobreescribimos lo que sea necesario */
+.filtro-select,
+.filtro-input {
+    padding: 10px 15px;
+    border: 2px solid #ddd;
+    border-radius: 8px;
+    font-size: 15px;
+    font-family: inherit;
+    background: #fafafa;
+    transition: border-color 0.3s ease;
+    width: 100%;
+}
+
+.filtro-select:focus,
+.filtro-input:focus {
+    outline: none;
+    border-color: var(--color-admin-primario);
+}
+
+/* ===================================
+   BOTÓN GENERAR
+   =================================== */
+.btn-generar {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: linear-gradient(135deg, #3498db 0%, #5dade2 100%);
+    color: white;
+    padding: 12px 30px;
+    border: none;
+    border-radius: 25px;
+    font-size: 15px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+    text-decoration: none;
+}
+
+.btn-generar:hover {
+    transform: translateX(5px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+    background: linear-gradient(135deg, #2e86c1 0%, #3498db 100%);
+}
+
+.nav-link-active {
+    border-bottom: 2px solid white !important;
+}
+
+/* ===================================
+   RESPONSIVE
+   =================================== */
+@media (max-width: 768px) {
+    .filtros-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .informe-card:hover {
+        transform: translateY(-5px);
+    }
+
+    .informe-icon {
+        width: 55px;
+        height: 55px;
+    }
+
+    .informe-title {
+        font-size: 18px;
+    }
+}
+}

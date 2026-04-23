@@ -15,6 +15,8 @@
         <a href="#" class="nav-link">Seguimiento</a>
         <a th:href="@{/web/coordinador/validarHoras}" class="nav-link">Validar horas</a>
         <a href="#" class="nav-link">Evaluaciones</a>
+        <a th:href="@{/web/documentos/coordinador}" class="nav-link">Documentación</a>
+        <a th:href="@{/web/informes/seleccion}" class="nav-link">Informes</a>
         <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
     </div>
 </nav>
@@ -56,6 +58,20 @@
             <div class="action-card">
                 <div class="card-icon">
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                    </svg>
+                </div>
+                <h3 class="card-title">Documentación</h3>
+                <p class="card-description">Consulta los documentos subidos por tus alumnos y su estado en el proceso de validación.</p>
+                <a th:href="@{/web/documentos/coordinador}" class="card-button">Ver documentos →</a>
+            </div>
+
+            <div class="action-card">
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                         <circle cx="12" cy="12" r="10"></circle>
                         <path d="M12 6v6l4 2"></path>
                     </svg>
@@ -91,6 +107,20 @@
                 <a href="#" class="card-button">Evaluar →</a>
             </div>
 
+            <div class="action-card">
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                        <polyline points="14 2 14 8 20 8"></polyline>
+                        <line x1="16" y1="13" x2="8" y2="13"></line>
+                        <line x1="16" y1="17" x2="8" y2="17"></line>
+                        <line x1="12" y1="11" x2="8" y2="11"></line>
+                    </svg>
+                </div>
+                <h3 class="card-title">Generar informes</h3>
+                <p class="card-description">Genera informes de seguimiento filtrados por fecha, curso y estado de las prácticas.</p>
+                <a th:href="@{/web/informes/seleccion}" class="card-button">Generar →</a>
+            </div>
         </div>
     </div>
 </div>

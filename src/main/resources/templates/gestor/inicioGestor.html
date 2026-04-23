@@ -12,7 +12,7 @@
     <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
         <a href="#" class="nav-link">Consulta alumnos</a>
-        <a href="#" class="nav-link">Gestionar documentación</a>
+        <a th:href="@{/web/documentos/gestor}" class="nav-link">Gestionar documentación</a>
         <a th:href="@{/web/gestor/validarHoras}" class="nav-link">Validar horas</a>
         <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
     </div>
@@ -73,8 +73,8 @@
                     </svg>
                 </div>
                 <h3 class="card-title">Gestionar documentación</h3>
-                <p class="card-description">Gestiona la documentación de los alumnos en prácticas.</p>
-                <a href="#" class="card-button">Gestionar →</a>
+                <p class="card-description">Firma convenios, sube informes de seguimiento y evaluaciones de tus alumnos.</p>
+                <a th:href="@{/web/documentos/gestor}" class="card-button">Gestionar →</a>
             </div>
 
         </div>

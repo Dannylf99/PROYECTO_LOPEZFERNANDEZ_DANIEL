@@ -1,31 +1,50 @@
 package main.controllers;
 
-import org.springframework.web.bind.annotation.*;
-
+import jakarta.servlet.http.HttpSession;
+import main.repositories.PracticaRepository;
 import main.roles.GestorRol;
+import main.roles.PracticaRol;
+import main.services.DocumentoService;
 import main.services.GestorService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
-@RestController
-@RequestMapping("/gestores")
+@Controller
+@RequestMapping("/web/gestor")
 public class GestorController {
 
-    private final GestorService gestorService;
+    @Autowired private GestorService gestorService;
+    @Autowired private DocumentoService documentoService;
+    @Autowired private PracticaRepository practicaRepository;
 
-    public GestorController(GestorService gestorService) {
-        this.gestorService = gestorService;
+    @GetMapping("/inicio")
+    public String inicioGestor(HttpSession session, Model model) {
+        Object usuario = session.getAttribute("usuario");
+        if (!(usuario instanceof GestorRol)) return "redirect:/web/login";
+        GestorRol gestor = (GestorRol) usuario;
+        model.addAttribute("usuario", gestor);
+        return "gestor/inicioGestor";
     }
 
-    @PostMapping("/login")
-    public String login(@RequestParam String email, @RequestParam String contrasenya) {
-        GestorRol gestor = gestorService.login(email, contrasenya);
-        if (gestor == null) return "Credenciales incorrectas";
-        return "Login exitoso: Gestor";
-    }
+    @GetMapping("/documentos")
+    public String documentosGestor(HttpSession session, Model model) {
+        Object usuario = session.getAttribute("usuario");
+        if (!(usuario instanceof GestorRol)) return "redirect:/web/login";
+        GestorRol gestor = (GestorRol) usuario;
 
-    @GetMapping
-    public List<GestorRol> getAllGestores() {
-        return gestorService.getAllGestores();
+        model.addAttribute("usuario", gestor);
+        model.addAttribute("pendientes",
+                documentoService.findPendientesFirmaGestor(gestor.getIdEmpresa()));
+        model.addAttribute("practicas",
+                practicaRepository.findByEmpresaIdAndEstado(
+                        gestor.getIdEmpresa(), PracticaRol.Estado.ACTIVA));
+        model.addAttribute("todosDocumentos",
+                documentoService.findByEmpresa(gestor.getIdEmpresa()));
+
+        return "gestor/documentosGestor";
     }
 }

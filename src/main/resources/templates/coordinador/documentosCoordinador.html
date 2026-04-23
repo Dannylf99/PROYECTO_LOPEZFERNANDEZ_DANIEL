@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Documentación | Gestion@</title>
+    <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
+    <link rel="stylesheet" th:href="@{/css/coordinador.css}">
+    <link rel="stylesheet" th:href="@{/css/documentos.css}">
+</head>
+<body>
+<nav class="navbar-coordinador">
+    <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
+    <div class="nav-menu">
+        <a th:href="@{/web/inicioCoordinador}" class="nav-link">Inicio</a>
+        <a th:href="@{/web/coordinador/validarHoras}" class="nav-link">Validar horas</a>
+        <a th:href="@{/web/documentos/coordinador}" class="nav-link nav-link-active">Documentación</a>
+        <a th:href="@{/web/informes/seleccion}" class="nav-link">Informes</a>
+        <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
+    </div>
+</nav>
+
+<div class="container-coordinador">
+
+    <div class="doc-header">
+        <h1 class="doc-title">Convenios pendientes de firma</h1>
+        <p class="doc-subtitle">Convenios de tus alumnos que requieren tu firma tras la del gestor.</p>
+    </div>
+
+    <div class="doc-card">
+        <div th:if="${#lists.isEmpty(pendientes)}" class="doc-empty">
+            No hay convenios pendientes de tu firma en este momento.
+        </div>
+        <div class="doc-table-wrap" th:unless="${#lists.isEmpty(pendientes)}">
+            <table class="doc-table">
+                <thead>
+                <tr>
+                    <th>Alumno</th>
+                    <th>Empresa</th>
+                    <th>Fecha subida</th>
+                    <th>Firmado gestor</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="doc : ${pendientes}">
+                    <td th:text="${doc.alumno.nombre + ' ' + doc.alumno.apellidos}"></td>
+                    <td th:text="${doc.practica.empresa.nombre}"></td>
+                    <td th:text="${#temporals.format(doc.fechaSubida,'dd/MM/yyyy HH:mm')}"></td>
+                    <td th:text="${#temporals.format(doc.fechaFirmaGestor,'dd/MM/yyyy HH:mm')}"></td>
+                    <td class="doc-acciones">
+                        <a th:href="@{/web/documentos/descargar/{id}(id=${doc.idDocumento})}"
+                           class="btn-doc-sm btn-doc-download">Descargar</a>
+                        <form th:action="@{/web/documentos/coordinador/firmar/{id}(id=${doc.idDocumento})}"
+                              method="post" style="display:inline">
+                            <button type="submit" class="btn-doc-sm btn-doc-sign">Firmar</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>

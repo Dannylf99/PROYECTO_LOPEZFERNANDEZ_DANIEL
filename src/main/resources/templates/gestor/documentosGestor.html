@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Documentación | Gestion@</title>
+    <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
+    <link rel="stylesheet" th:href="@{/css/administracion.css}">
+    <link rel="stylesheet" th:href="@{/css/documentos.css}">
+</head>
+<body>
+<nav class="navbar-administracion">
+    <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
+    <div class="nav-menu">
+        <a th:href="@{/web/inicioGestor}" class="nav-link">Inicio</a>
+        <a th:href="@{/web/documentos/gestor}" class="nav-link nav-link-active">Documentación</a>
+        <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
+    </div>
+</nav>
+
+<div class="container-administracion">
+
+    <div class="doc-header">
+        <h1 class="doc-title">Documentación</h1>
+        <p class="doc-subtitle">Firma convenios y sube documentos de seguimiento y evaluación de tus alumnos.</p>
+    </div>
+
+    <!-- SECCIÓN 1: Subir informe o evaluación -->
+    <div class="doc-card">
+        <h2 class="doc-section-title">Subir documento</h2>
+
+        <div th:if="${#lists.isEmpty(practicas)}" class="doc-empty">
+            No tienes prácticas activas asignadas en este momento.
+        </div>
+
+        <form th:unless="${#lists.isEmpty(practicas)}"
+              th:action="@{/web/documentos/gestor/subir}" method="post"
+              enctype="multipart/form-data" class="doc-form">
+            <div class="doc-form-grid">
+                <div class="doc-form-group">
+                    <label>Alumno</label>
+                    <select name="idPractica" class="doc-select" required>
+                        <option value="">Selecciona un alumno</option>
+                        <option th:each="p : ${practicas}"
+                                th:value="${p.idPractica}"
+                                th:text="${p.alumno.apellidos + ', ' + p.alumno.nombre}">
+                        </option>
+                    </select>
+                </div>
+                <div class="doc-form-group">
+                    <label>Tipo de documento</label>
+                    <select name="tipo" class="doc-select" required>
+                        <option value="INFORME_SEGUIMIENTO">Informe de seguimiento</option>
+                        <option value="EVALUACION">Evaluación</option>
+                    </select>
+                </div>
+                <div class="doc-form-group">
+                    <label>Archivo PDF</label>
+                    <input type="file" name="archivo" accept=".pdf" required class="doc-file">
+                </div>
+            </div>
+            <button type="submit" class="btn-doc-primary">Subir documento</button>
+        </form>
+    </div>
+
+    <!-- SECCIÓN 2: Convenios pendientes de firma -->
+    <div class="doc-card">
+        <h2 class="doc-section-title">Convenios pendientes de tu firma</h2>
+
+        <div th:if="${#lists.isEmpty(pendientes)}" class="doc-empty">
+            No hay convenios pendientes de tu firma en este momento.
+        </div>
+
+        <div class="doc-table-wrap" th:unless="${#lists.isEmpty(pendientes)}">
+            <table class="doc-table">
+                <thead>
+                <tr>
+                    <th>Alumno</th>
+                    <th>Tipo</th>
+                    <th>Fecha subida</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="doc : ${pendientes}">
+                    <td th:text="${doc.alumno.apellidos + ', ' + doc.alumno.nombre}"></td>
+                    <td th:text="${doc.tipo.name().replace('_',' ')}"></td>
+                    <td th:text="${#temporals.format(doc.fechaSubida,'dd/MM/yyyy HH:mm')}"></td>
+                    <td class="doc-acciones">
+                        <a th:href="@{/web/documentos/descargar/{id}(id=${doc.idDocumento})}"
+                           class="btn-doc-sm btn-doc-download">Descargar</a>
+                        <form th:action="@{/web/documentos/gestor/firmar/{id}(id=${doc.idDocumento})}"
+                              method="post" style="display:inline">
+                            <button type="submit" class="btn-doc-sm btn-doc-sign">Firmar</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+    <!-- SECCIÓN 3: Todos los documentos de sus alumnos -->
+    <div class="doc-card">
+        <h2 class="doc-section-title">Documentos de mis alumnos</h2>
+
+        <div th:if="${#lists.isEmpty(todosDocumentos)}" class="doc-empty">
+            No hay documentos registrados para tus alumnos aún.
+        </div>
+
+        <div class="doc-table-wrap" th:unless="${#lists.isEmpty(todosDocumentos)}">
+            <table class="doc-table">
+                <thead>
+                <tr>
+                    <th>Alumno</th>
+                    <th>Tipo</th>
+                    <th>Fecha subida</th>
+                    <th>Estado</th>
+                    <th>Descargar</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="doc : ${todosDocumentos}">
+                    <td th:text="${doc.alumno.apellidos + ', ' + doc.alumno.nombre}"></td>
+                    <td th:text="${doc.tipo.name().replace('_',' ')}"></td>
+                    <td th:text="${#temporals.format(doc.fechaSubida,'dd/MM/yyyy HH:mm')}"></td>
+                    <td>
+                            <span class="doc-badge"
+                                  th:classappend="${doc.estado.name()}"
+                                  th:text="${doc.estado.name().replace('_',' ')}">
+                            </span>
+                    </td>
+                    <td>
+                        <a th:href="@{/web/documentos/descargar/{id}(id=${doc.idDocumento})}"
+                           class="btn-doc-sm btn-doc-download">Descargar</a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+
+</div>
+</body>
+</html>

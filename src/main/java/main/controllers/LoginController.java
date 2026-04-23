@@ -44,10 +44,27 @@ public class LoginController {
             return "login";
         }
         session.setAttribute("usuario", usuario);
-        if (usuario instanceof AlumnoRol)        { ((AlumnoRol) usuario).iniciarSesion();        return "redirect:/web/inicioAlumno"; }
-        if (usuario instanceof CoordinadorRol)   { ((CoordinadorRol) usuario).iniciarSesion();   return "redirect:/web/inicioCoordinador"; }
-        if (usuario instanceof GestorRol)        { ((GestorRol) usuario).iniciarSesion();        return "redirect:/web/inicioGestor"; }
-        if (usuario instanceof AdministracionRol){ ((AdministracionRol) usuario).iniciarSesion();return "redirect:/web/inicioAdministracion"; }
+
+        if (usuario instanceof AlumnoRol) {
+            session.setAttribute("rol", "ALUMNO");
+            ((AlumnoRol) usuario).iniciarSesion();
+            return "redirect:/web/inicioAlumno";
+        }
+        if (usuario instanceof CoordinadorRol) {
+            session.setAttribute("rol", "COORDINADOR");
+            ((CoordinadorRol) usuario).iniciarSesion();
+            return "redirect:/web/inicioCoordinador";
+        }
+        if (usuario instanceof GestorRol) {
+            session.setAttribute("rol", "GESTOR");
+            ((GestorRol) usuario).iniciarSesion();
+            return "redirect:/web/inicioGestor";
+        }
+        if (usuario instanceof AdministracionRol) {
+            session.setAttribute("rol", "ADMINISTRACION");
+            ((AdministracionRol) usuario).iniciarSesion();
+            return "redirect:/web/inicioAdministracion";
+        }
         return "redirect:/web/login";
     }
 
@@ -112,10 +129,10 @@ public class LoginController {
     @GetMapping("/logout")
     public String logout(HttpSession session, HttpServletResponse response) {
         Object usuario = session.getAttribute("usuario");
-        if (usuario instanceof AlumnoRol)        ((AlumnoRol) usuario).cerrarSesion();
-        if (usuario instanceof CoordinadorRol)   ((CoordinadorRol) usuario).cerrarSesion();
-        if (usuario instanceof GestorRol)        ((GestorRol) usuario).cerrarSesion();
-        if (usuario instanceof AdministracionRol)((AdministracionRol) usuario).cerrarSesion();
+        if (usuario instanceof AlumnoRol)         ((AlumnoRol) usuario).cerrarSesion();
+        if (usuario instanceof CoordinadorRol)    ((CoordinadorRol) usuario).cerrarSesion();
+        if (usuario instanceof GestorRol)         ((GestorRol) usuario).cerrarSesion();
+        if (usuario instanceof AdministracionRol) ((AdministracionRol) usuario).cerrarSesion();
         session.invalidate();
         noCache(response);
         return "redirect:/web/login";

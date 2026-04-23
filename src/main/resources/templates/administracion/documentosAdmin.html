@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Documentación | Gestion@</title>
+    <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
+    <link rel="stylesheet" th:href="@{/css/administracion.css}">
+    <link rel="stylesheet" th:href="@{/css/documentos.css}">
+</head>
+<body>
+<nav class="navbar-administracion">
+    <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
+    <div class="nav-menu">
+        <a th:href="@{/web/inicioAdministracion}" class="nav-link">Inicio</a>
+        <a th:href="@{/admin/usuarios}" class="nav-link">Usuarios</a>
+        <a th:href="@{/admin/practicas}" class="nav-link">Prácticas</a>
+        <a th:href="@{/admin/empresas}" class="nav-link">Empresas</a>
+        <a th:href="@{/web/documentos/admin}" class="nav-link nav-link-active">Documentación</a>
+        <a th:href="@{/web/informes/seleccion}" class="nav-link">Informes</a>
+        <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
+    </div>
+</nav>
+
+<div class="container-administracion">
+
+    <div class="doc-header">
+        <h1 class="doc-title">Documentos pendientes de validación</h1>
+        <p class="doc-subtitle">Documentos que han completado el proceso de firmas y esperan tu validación final.</p>
+    </div>
+
+    <div class="doc-card">
+        <div th:if="${#lists.isEmpty(pendientes)}" class="doc-empty">
+            No hay documentos pendientes de validación.
+        </div>
+        <div class="doc-table-wrap" th:unless="${#lists.isEmpty(pendientes)}">
+            <table class="doc-table">
+                <thead>
+                <tr>
+                    <th>Alumno</th>
+                    <th>Tipo</th>
+                    <th>Empresa</th>
+                    <th>Fecha subida</th>
+                    <th>Acciones</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr th:each="doc : ${pendientes}">
+                    <td th:text="${doc.alumno.nombre + ' ' + doc.alumno.apellidos}"></td>
+                    <td th:text="${doc.tipo.name().replace('_',' ')}"></td>
+                    <td th:text="${doc.practica.empresa.nombre}"></td>
+                    <td th:text="${#temporals.format(doc.fechaSubida,'dd/MM/yyyy HH:mm')}"></td>
+                    <td class="doc-acciones">
+                        <a th:href="@{/web/documentos/descargar/{id}(id=${doc.idDocumento})}"
+                           class="btn-doc-sm btn-doc-download">Descargar</a>
+                        <form th:action="@{/web/documentos/admin/validar/{id}(id=${doc.idDocumento})}"
+                              method="post" style="display:inline">
+                            <button type="submit" class="btn-doc-sm btn-doc-validar">Validar</button>
+                        </form>
+                        <form th:action="@{/web/documentos/admin/rechazar/{id}(id=${doc.idDocumento})}"
+                              method="post" style="display:inline">
+                            <button type="submit" class="btn-doc-sm btn-doc-rechazar">Rechazar</button>
+                        </form>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+</body>
+</html>
