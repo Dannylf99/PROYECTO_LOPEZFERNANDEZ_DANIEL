@@ -4,7 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Inicio - Administración | Gestion@</title>
-
     <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
     <link rel="stylesheet" th:href="@{/css/administracion.css}">
 </head>
@@ -12,12 +11,21 @@
 <nav class="navbar-administracion">
     <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
-        <a th:href="@{/admin/usuarios}" class="nav-link">Usuarios</a>
-        <a th:href="@{/admin/practicas}" class="nav-link">Prácticas</a>
-        <a th:href="@{/admin/empresas}" class="nav-link">Empresas</a>
-        <a th:href="@{/web/documentos/admin}" class="nav-link">Documentación</a>
+        <a th:href="@{/web/inicioAdministracion}" class="nav-link">Inicio</a>
+        <a th:href="@{/admin/usuarios}"           class="nav-link">Usuarios</a>
+        <a th:href="@{/admin/practicas}"          class="nav-link">Prácticas</a>
+        <a th:href="@{/admin/empresas}"           class="nav-link">Empresas</a>
+        <div class="nav-dropdown">
+            <span class="nav-link nav-dropdown-toggle">Documentación ▾</span>
+            <div class="nav-dropdown-menu">
+                <div class="nav-dropdown-menu-inner">
+                    <a th:href="@{/web/documentos/admin/listado}" class="nav-dropdown-item">Gestión</a>
+                    <a th:href="@{/web/documentos/admin}"         class="nav-dropdown-item">Validación</a>
+                </div>
+            </div>
+        </div>
         <a th:href="@{/web/informes/seleccion}" class="nav-link">Informes</a>
-        <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
+        <a th:href="@{/web/logout}"             class="btn-logout">Cerrar sesión</a>
     </div>
 </nav>
 
@@ -28,10 +36,12 @@
             <div class="welcome-section">
                 <h1 class="welcome-title">Bienvenido, <span th:text="${usuario.nombre}">NOMBRE</span></h1>
                 <p class="welcome-text">
-                    Lorem ipsum dolor sit amet et delectus accommodare his consul copiosae legendos at vix ad putent delectus
-                    delicata usu. Vidit dissentiet eos cu eum brute copiosae hendrerit. Eos erant dolorum an. Per facer affert ut.
+                    Desde este panel puedes gestionar todos los aspectos del sistema Gestion@.
+                    Tienes acceso completo a la gestión de usuarios, prácticas, empresas,
+                    documentación e informes. Usa las tarjetas de la derecha para acceder
+                    rápidamente a cada módulo del sistema.
                 </p>
-                <div class="notifications-box" th:if="${notificacionesNoLeidas > 0}">
+                <div class="notifications-box" th:if="${notificacionesNoLeidas != null and notificacionesNoLeidas > 0}">
                     <p>
                         Tienes <strong th:text="${notificacionesNoLeidas} + ' notificaciones nuevas'"></strong>.
                         Pulsa <a th:href="@{/web/alumno/notificaciones}" class="link-notif">aquí</a> para verlas.
@@ -42,6 +52,7 @@
 
         <div class="column-right">
 
+            <!-- Usuarios -->
             <div class="action-card">
                 <div class="card-icon">
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -52,10 +63,11 @@
                     </svg>
                 </div>
                 <h3 class="card-title">Gestionar usuarios</h3>
-                <p class="card-description">Crear, editar y dar de baja usuarios del sistema: alumnos, coordinadores, gestores y administradores.</p>
+                <p class="card-description">Crea, edita y da de baja usuarios del sistema: alumnos, coordinadores, gestores y administradores. También puedes activar o desactivar cuentas existentes.</p>
                 <a th:href="@{/admin/usuarios}" class="card-button">Gestionar →</a>
             </div>
 
+            <!-- Prácticas -->
             <div class="action-card">
                 <div class="card-icon">
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -65,10 +77,11 @@
                     </svg>
                 </div>
                 <h3 class="card-title">Gestionar prácticas</h3>
-                <p class="card-description">Crear y gestionar prácticas asignando alumnos, coordinadores y empresas.</p>
+                <p class="card-description">Crea y gestiona las prácticas FCT asignando alumnos, coordinadores y empresas. Controla el estado de cada práctica y sus fechas de inicio y fin.</p>
                 <a th:href="@{/admin/practicas}" class="card-button">Gestionar →</a>
             </div>
 
+            <!-- Empresas -->
             <div class="action-card">
                 <div class="card-icon">
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -77,23 +90,11 @@
                     </svg>
                 </div>
                 <h3 class="card-title">Gestionar empresas</h3>
-                <p class="card-description">Registrar y consultar las empresas colaboradoras en el sistema de prácticas.</p>
+                <p class="card-description">Registra y consulta las empresas colaboradoras del programa de prácticas. Puedes añadir nuevas empresas y editar los datos de las existentes.</p>
                 <a th:href="@{/admin/empresas}" class="card-button">Gestionar →</a>
             </div>
 
-            <div class="action-card">
-                <div class="card-icon">
-                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
-                        <polyline points="17 8 12 3 7 8"></polyline>
-                        <line x1="12" y1="3" x2="12" y2="15"></line>
-                    </svg>
-                </div>
-                <h3 class="card-title">Gestionar documentación</h3>
-                <p class="card-description">Valida, rechaza y gestiona la documentación subida por alumnos y gestores.</p>
-                <a th:href="@{/web/documentos/admin}" class="card-button">Gestionar →</a>
-            </div>
-
+            <!-- Documentación — Gestión -->
             <div class="action-card">
                 <div class="card-icon">
                     <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
@@ -101,13 +102,39 @@
                         <polyline points="14 2 14 8 20 8"></polyline>
                         <line x1="16" y1="13" x2="8" y2="13"></line>
                         <line x1="16" y1="17" x2="8" y2="17"></line>
-                        <line x1="12" y1="11" x2="8" y2="11"></line>
+                        <line x1="10" y1="9" x2="8" y2="9"></line>
+                    </svg>
+                </div>
+                <h3 class="card-title">Gestión documental</h3>
+                <p class="card-description">Consulta y filtra todos los documentos del sistema por alumno, empresa, tipo y estado. Descarga cualquier documento y valida o rechaza los que estén pendientes.</p>
+                <a th:href="@{/web/documentos/admin/listado}" class="card-button">Ver documentos →</a>
+            </div>
+
+            <!-- Documentación — Validación -->
+            <div class="action-card">
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                <h3 class="card-title">Validación de documentos</h3>
+                <p class="card-description">Revisa los documentos que han completado el proceso de firmas y están pendientes de tu validación final antes de ser entregados oficialmente.</p>
+                <a th:href="@{/web/documentos/admin}" class="card-button">Validar →</a>
+            </div>
+
+            <!-- Informes -->
+            <div class="action-card">
+                <div class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M3 3v18h18"></path>
+                        <path d="M7 14l4-4 4 4 6-6"></path>
                     </svg>
                 </div>
                 <h3 class="card-title">Generar informes</h3>
-                <p class="card-description">Genera informes filtrados por fecha, curso y estado de las prácticas en formato PDF.</p>
+                <p class="card-description">Genera informes en PDF filtrados por fecha, curso y estado de las prácticas. Disponible tanto para el listado de alumnos como para el seguimiento general.</p>
                 <a th:href="@{/web/informes/seleccion}" class="card-button">Generar →</a>
             </div>
+
         </div>
     </div>
 </div>

@@ -11,6 +11,68 @@
 body::before { background-color: #3498db; }
 
 /* ===================================
+   DROPDOWN NAVBAR ADMINISTRACIÓN
+   =================================== */
+.navbar-administracion .nav-dropdown {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+}
+
+.navbar-administracion .nav-dropdown-toggle {
+    cursor: pointer;
+    user-select: none;
+}
+
+.navbar-administracion .nav-dropdown-menu {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    padding-top: 12px; /* ← cubre el hueco entre el toggle y el menú */
+    min-width: 160px;
+    z-index: 100;
+}
+
+.navbar-administracion .nav-dropdown-menu-inner {
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+    overflow: hidden;
+}
+
+.navbar-administracion .nav-dropdown:hover .nav-dropdown-menu {
+    display: block;
+}
+
+.navbar-administracion .nav-dropdown-item {
+    display: block;
+    padding: 12px 20px;
+    color: #333;
+    text-decoration: none;
+    font-size: 15px;
+    font-weight: 500;
+    transition: background 0.2s;
+}
+
+.navbar-administracion .nav-dropdown-item:hover {
+    background: #f0f7ff;
+    color: var(--color-admin-primario);
+}
+
+.navbar-administracion .nav-dropdown-menu-inner::before {
+    content: '';
+    position: absolute;
+    top: 6px;
+    left: 50%;
+    transform: translateX(-50%);
+    border-left: 6px solid transparent;
+    border-right: 6px solid transparent;
+    border-bottom: 6px solid white;
+}
+
+/* ===================================
    NAVBAR DE ADMINISTRACIÓN (AZUL)
    =================================== */
 .navbar-administracion {

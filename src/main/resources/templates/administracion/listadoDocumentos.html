@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Listado de documentos | Gestion@</title>
+    <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
+    <link rel="stylesheet" th:href="@{/css/administracion.css}">
+    <link rel="stylesheet" th:href="@{/css/gestion-usuarios.css}">
+    <link rel="stylesheet" th:href="@{/css/documentos.css}">
+</head>
+<body>
+<nav class="navbar-administracion">
+    <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
+    <div class="nav-menu">
+        <a th:href="@{/web/inicioAdministracion}" class="nav-link">Inicio</a>
+        <a th:href="@{/admin/usuarios}"           class="nav-link">Usuarios</a>
+        <a th:href="@{/admin/practicas}"          class="nav-link">Prácticas</a>
+        <a th:href="@{/admin/empresas}"           class="nav-link">Empresas</a>
+
+        <div class="nav-dropdown">
+            <span class="nav-link nav-dropdown-toggle">Documentación ▾</span>
+            <div class="nav-dropdown-menu">
+                <div class="nav-dropdown-menu-inner">
+                    <a th:href="@{/web/documentos/admin/listado}" class="nav-dropdown-item">Gestión</a>
+                    <a th:href="@{/web/documentos/admin}"         class="nav-dropdown-item">Validación</a>
+                </div>
+            </div>
+        </div>
+
+        <a th:href="@{/web/informes/seleccion}" class="nav-link">Informes</a>
+        <a th:href="@{/web/logout}"             class="btn-logout">Cerrar sesión</a>
+    </div>
+</nav>
+
+<div class="container-administracion">
+
+    <div class="page-header">
+        <div>
+            <a th:href="@{/web/inicioAdministracion}" class="btn-volver">← Volver</a>
+            <h1 class="page-title">Documentación</h1>
+            <p class="page-subtitle">Consulta, filtra y gestiona todos los documentos del sistema.</p>
+        </div>
+        <a th:href="@{/web/documentos/admin}" class="btn-nuevo-usuario">
+            Pendientes de validación
+        </a>
+    </div>
+
+    <!-- Filtros -->
+    <div class="doc-card" style="margin-bottom:25px;">
+        <h2 class="doc-section-title">Filtros</h2>
+        <form th:action="@{/web/documentos/admin/listado}" method="get">
+            <div style="display:grid; grid-template-columns: repeat(auto-fit, minmax(180px,1fr)); gap:1rem; margin-bottom:1rem;">
+
+                <div class="doc-form-group">
+                    <label class="filtro-label">Tipo</label>
+                    <select name="tipo" class="doc-select">
+                        <option value="">Todos</option>
+                        <option value="CONVENIO"            th:selected="${tipoSeleccionado == 'CONVENIO'}">Convenio</option>
+                        <option value="MEMORIA_FINAL"       th:selected="${tipoSeleccionado == 'MEMORIA_FINAL'}">Memoria final</option>
+                        <option value="INFORME_SEGUIMIENTO" th:selected="${tipoSeleccionado == 'INFORME_SEGUIMIENTO'}">Informe de seguimiento</option>
+                        <option value="EVALUACION"          th:selected="${tipoSeleccionado == 'EVALUACION'}">Evaluación</option>
+                    </select>
+                </div>
+
+                <div class="doc-form-group">
+                    <label class="filtro-label">Estado</label>
+                    <select name="estado" class="doc-select">
+                        <option value="">Todos</option>
+                        <option value="PENDIENTE_FIRMA_GESTOR"      th:selected="${estadoSeleccionado == 'PENDIENTE_FIRMA_GESTOR'}">Pend. firma gestor</option>
+                        <option value="PENDIENTE_FIRMA_COORDINADOR" th:selected="${estadoSeleccionado == 'PENDIENTE_FIRMA_COORDINADOR'}">Pend. firma coordinador</option>
+                        <option value="PENDIENTE_FIRMA_ALUMNO"      th:selected="${estadoSeleccionado == 'PENDIENTE_FIRMA_ALUMNO'}">Pend. firma alumno</option>
+                        <option value="PENDIENTE_VALIDACION"        th:selected="${estadoSeleccionado == 'PENDIENTE_VALIDACION'}">Pend. validación</option>
+                        <option value="VALIDADO"                    th:selected="${estadoSeleccionado == 'VALIDADO'}">Validado</option>
+                        <option value="RECHAZADO"                   th:selected="${estadoSeleccionado == 'RECHAZADO'}">Rechazado</option>
+                    </select>
+                </div>
+
+                <div class="doc-form-group">
+                    <label class="filtro-label">Alumno</label>
+                    <select name="idAlumno" class="doc-select">
+                        <option value="">Todos</option>
+                        <option th:each="a : ${alumnos}"
+                                th:value="${a.idUsuario}"
+                                th:text="${a.apellidos + ', ' + a.nombre}"
+                                th:selected="${alumnoSeleccionado == a.idUsuario.toString()}">
+                        </option>
+                    </select>
+                </div>
+
+                <div class="doc-form-group">
+                    <label class="filtro-label">Empresa</label>
+                    <select name="idEmpresa" class="doc-select">
+                        <option value="">Todas</option>
+                        <option th:each="e : ${empresas}"
+                                th:value="${e.idEmpresa}"
+                                th:text="${e.nombre}"
+                                th:selected="${empresaSeleccionada == e.idEmpresa.toString()}">
+                        </option>
+                    </select>
+                </div>
+
+            </div>
+            <button type="submit" class="btn-crear">Filtrar</button>
+            <a th:href="@{/web/documentos/admin/listado}" class="btn-cancelar"
+               style="margin-left:8px;">Limpiar filtros</a>
+        </form>
+    </div>
+
+    <!-- Tabla -->
+    <div class="table-wrapper">
+        <table class="users-table">
+            <thead>
+            <tr>
+                <th>Alumno</th>
+                <th>Empresa</th>
+                <th>Tipo</th>
+                <th>Fecha subida</th>
+                <th>Estado</th>
+                <th>Acciones</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:if="${#lists.isEmpty(documentos)}">
+                <td colspan="6" class="empty-table">No hay documentos con los filtros seleccionados.</td>
+            </tr>
+            <tr th:each="doc : ${documentos}">
+                <td th:text="${doc.alumno.apellidos + ', ' + doc.alumno.nombre}"></td>
+                <td th:text="${doc.practica != null ? doc.practica.empresa.nombre : '-'}"></td>
+                <td th:text="${doc.tipo.name().replace('_',' ')}"></td>
+                <td th:text="${#temporals.format(doc.fechaSubida,'dd/MM/yyyy HH:mm')}"></td>
+                <td>
+                        <span class="doc-badge"
+                              th:classappend="${doc.estado.name()}"
+                              th:text="${doc.estado.name().replace('_',' ')}">
+                        </span>
+                </td>
+                <td class="actions-cell">
+                    <a th:href="@{/web/documentos/descargar/{id}(id=${doc.idDocumento})}"
+                       class="btn-action">Descargar</a>
+                    <form th:if="${doc.estado.name() == 'PENDIENTE_VALIDACION'}"
+                          th:action="@{/web/documentos/admin/validar/{id}(id=${doc.idDocumento})}"
+                          method="post" style="display:inline">
+                        <button type="submit" class="btn-action btn-doc-validar">Validar</button>
+                    </form>
+                    <form th:if="${doc.estado.name() == 'PENDIENTE_VALIDACION'}"
+                          th:action="@{/web/documentos/admin/rechazar/{id}(id=${doc.idDocumento})}"
+                          method="post" style="display:inline">
+                        <button type="submit" class="btn-action btn-delete">Rechazar</button>
+                    </form>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+
+</div>
+</body>
+</html>

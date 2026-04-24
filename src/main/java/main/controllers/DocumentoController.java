@@ -1,6 +1,8 @@
 package main.controllers;
 
 import jakarta.servlet.http.HttpSession;
+import main.repositories.AlumnoRepository;
+import main.repositories.EmpresaRepository;
 import main.repositories.PracticaRepository;
 import main.roles.*;
 import main.services.DocumentoService;
@@ -13,13 +15,18 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
+import java.util.Comparator;
+import java.util.List;
+import java.util.stream.Collectors;
+
 @Controller
 @RequestMapping("/web/documentos")
 public class DocumentoController {
 
     @Autowired private DocumentoService documentoService;
     @Autowired private PracticaRepository practicaRepository;
-
+    @Autowired private EmpresaRepository empresaRepository;
+    @Autowired private AlumnoRepository alumnoRepository;
     // ── ALUMNO ───────────────────────────────────────────────────────────────
 
     @GetMapping("/alumno")
@@ -195,5 +202,60 @@ public class DocumentoController {
                         "attachment; filename=" + nombreArchivo)
                 .contentType(MediaType.APPLICATION_PDF)
                 .body(bytes);
+    }
+
+    // ── ADMIN: vista listado con filtros ─────────────────────────────────────────
+    @GetMapping("/admin/listado")
+    public String listadoAdmin(HttpSession session, Model model,
+                               @RequestParam(required = false) String tipo,
+                               @RequestParam(required = false) String estado,
+                               @RequestParam(required = false) String idAlumno,
+                               @RequestParam(required = false) String idEmpresa) {
+        if (!(session.getAttribute("usuario") instanceof AdministracionRol))
+            return "redirect:/web/login";
+
+        model.addAttribute("usuario", session.getAttribute("usuario"));
+        model.addAttribute("documentos", documentoService.buscarConFiltros(tipo, estado, idAlumno, idEmpresa));
+        model.addAttribute("alumnos", alumnoRepository.findAll().stream()
+                .sorted(Comparator.comparing(AlumnoRol::getApellidos)
+                        .thenComparing(AlumnoRol::getNombre))
+                .collect(Collectors.toList()));
+        model.addAttribute("empresas", empresaRepository.findAll());
+        model.addAttribute("tipoSeleccionado",   tipo);
+        model.addAttribute("estadoSeleccionado", estado);
+        model.addAttribute("alumnoSeleccionado", idAlumno);
+        model.addAttribute("empresaSeleccionada", idEmpresa);
+        return "administracion/listadoDocumentos";
+    }
+
+    // ── COORDINADOR: vista listado con filtros (solo sus alumnos) ────────────────
+    @GetMapping("/coordinador/listado")
+    public String listadoCoordinador(HttpSession session, Model model,
+                                     @RequestParam(required = false) String tipo,
+                                     @RequestParam(required = false) String estado,
+                                     @RequestParam(required = false) String idAlumno) {
+        Object usuario = session.getAttribute("usuario");
+        if (!(usuario instanceof CoordinadorRol)) return "redirect:/web/login";
+        CoordinadorRol coordinador = (CoordinadorRol) usuario;
+
+        // Filtrar solo documentos de sus alumnos
+        List<DocumentoRol> docs = documentoService.buscarConFiltros(tipo, estado, idAlumno, null)
+                .stream()
+                .filter(d -> d.getPractica() != null &&
+                        d.getPractica().getCoordinador().getIdUsuario() == coordinador.getIdUsuario())
+                .collect(Collectors.toList());
+
+        model.addAttribute("usuario", coordinador);
+        model.addAttribute("documentos", docs);
+        model.addAttribute("alumnos", alumnoRepository.findAll().stream()
+                .filter(a -> a.getTutorCentro() != null &&
+                        a.getTutorCentro().equals(coordinador.getIdUsuario()))
+                .sorted(Comparator.comparing(AlumnoRol::getApellidos)
+                        .thenComparing(AlumnoRol::getNombre))
+                .collect(Collectors.toList()));
+        model.addAttribute("tipoSeleccionado",   tipo);
+        model.addAttribute("estadoSeleccionado", estado);
+        model.addAttribute("alumnoSeleccionado", idAlumno);
+        return "coordinador/listadoDocumentos";
     }
 }

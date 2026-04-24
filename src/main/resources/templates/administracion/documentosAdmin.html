@@ -12,19 +12,40 @@
     <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
         <a th:href="@{/web/inicioAdministracion}" class="nav-link">Inicio</a>
-        <a th:href="@{/admin/usuarios}" class="nav-link">Usuarios</a>
-        <a th:href="@{/admin/practicas}" class="nav-link">Prácticas</a>
-        <a th:href="@{/admin/empresas}" class="nav-link">Empresas</a>
-        <a th:href="@{/web/documentos/admin}" class="nav-link nav-link-active">Documentación</a>
+        <a th:href="@{/admin/usuarios}"           class="nav-link">Usuarios</a>
+        <a th:href="@{/admin/practicas}"          class="nav-link">Prácticas</a>
+        <a th:href="@{/admin/empresas}"           class="nav-link">Empresas</a>
+
+        <div class="nav-dropdown">
+            <span class="nav-link nav-dropdown-toggle">Documentación ▾</span>
+            <div class="nav-dropdown-menu">
+                <div class="nav-dropdown-menu-inner">
+                    <a th:href="@{/web/documentos/admin/listado}" class="nav-dropdown-item">Gestión</a>
+                    <a th:href="@{/web/documentos/admin}"         class="nav-dropdown-item">Validación</a>
+                </div>
+            </div>
+        </div>
+
         <a th:href="@{/web/informes/seleccion}" class="nav-link">Informes</a>
-        <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
+        <a th:href="@{/web/logout}"             class="btn-logout">Cerrar sesión</a>
     </div>
 </nav>
 
 <div class="container-administracion">
 
     <div class="doc-header">
-        <h1 class="doc-title">Documentos pendientes de validación</h1>
+        <div style="display:flex; align-items:center; gap:1.5rem; margin-bottom:0.4rem;">
+            <a th:href="@{/web/documentos/admin/listado}"
+               style="color: var(--color-admin-primario); text-decoration:none; font-weight:600;
+                  font-size:14px; display:inline-flex; align-items:center; gap:6px; white-space:nowrap;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                Volver
+            </a>
+            <h1 class="doc-title" style="margin-bottom:0;">Documentos pendientes de validación</h1>
+        </div>
         <p class="doc-subtitle">Documentos que han completado el proceso de firmas y esperan tu validación final.</p>
     </div>
 

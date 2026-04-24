@@ -224,4 +224,18 @@ public class DocumentoService {
     public List<DocumentoRol> findByEmpresa(int idEmpresa) {
         return documentoRepository.findByEmpresaId(idEmpresa);
     }
+
+    public List<DocumentoRol> buscarConFiltros(String tipo, String estado,
+                                               String idAlumno, String idEmpresa) {
+        DocumentoRol.Tipo   tipoEnum   = (tipo     != null && !tipo.isEmpty())
+                ? DocumentoRol.Tipo.valueOf(tipo)       : null;
+        DocumentoRol.Estado estadoEnum = (estado   != null && !estado.isEmpty())
+                ? DocumentoRol.Estado.valueOf(estado)   : null;
+        Integer alumnoId   = (idAlumno  != null && !idAlumno.isEmpty())
+                ? Integer.parseInt(idAlumno)  : null;
+        Integer empresaId  = (idEmpresa != null && !idEmpresa.isEmpty())
+                ? Integer.parseInt(idEmpresa) : null;
+
+        return documentoRepository.findWithFiltros(tipoEnum, estadoEnum, alumnoId, empresaId);
+    }
 }

@@ -44,12 +44,23 @@
 <nav class="navbar-administracion">
     <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
-        <a th:href="@{/admin/usuarios}" class="nav-link">Usuarios</a>
-        <a th:href="@{/admin/practicas}" class="nav-link active">Prácticas</a>
-        <a th:href="@{/admin/empresas}" class="nav-link">Empresas</a>
-        <a href="#" class="nav-link">Documentación</a>
+        <a th:href="@{/web/inicioAdministracion}" class="nav-link">Inicio</a>
+        <a th:href="@{/admin/usuarios}"           class="nav-link">Usuarios</a>
+        <a th:href="@{/admin/practicas}"          class="nav-link">Prácticas</a>
+        <a th:href="@{/admin/empresas}"           class="nav-link">Empresas</a>
+
+        <div class="nav-dropdown">
+            <span class="nav-link nav-dropdown-toggle">Documentación ▾</span>
+            <div class="nav-dropdown-menu">
+                <div class="nav-dropdown-menu-inner">
+                    <a th:href="@{/web/documentos/admin/listado}" class="nav-dropdown-item">Gestión</a>
+                    <a th:href="@{/web/documentos/admin}"         class="nav-dropdown-item">Validación</a>
+                </div>
+            </div>
+        </div>
+
         <a th:href="@{/web/informes/seleccion}" class="nav-link">Informes</a>
-        <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
+        <a th:href="@{/web/logout}"             class="btn-logout">Cerrar sesión</a>
     </div>
 </nav>
 <div class="container-administracion">

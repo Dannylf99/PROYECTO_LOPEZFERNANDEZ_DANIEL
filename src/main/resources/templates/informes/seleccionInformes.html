@@ -5,8 +5,8 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Generar informes | Gestion@</title>
     <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
-    <link rel="stylesheet" th:href="@{/css/administracion.css}">
-    <link rel="stylesheet" th:href="@{/css/coordinador.css}">
+    <link th:if="${rol == 'ADMINISTRACION'}" rel="stylesheet" th:href="@{/css/administracion.css}">
+    <link th:if="${rol == 'COORDINADOR'}"   rel="stylesheet" th:href="@{/css/coordinador.css}">
     <link rel="stylesheet" th:href="@{/css/informes.css}">
 </head>
 <body>
@@ -16,19 +16,27 @@
     <div class="nav-menu">
 
         <th:block th:if="${rol == 'ADMINISTRACION'}">
-            <a th:href="@{/admin/usuarios}" class="nav-link">Usuarios</a>
-            <a th:href="@{/admin/practicas}" class="nav-link">Prácticas</a>
-            <a th:href="@{/admin/empresas}" class="nav-link">Empresas</a>
-            <a href="#" class="nav-link">Documentación</a>
+            <a th:href="@{/web/inicioAdministracion}" class="nav-link">Inicio</a>
+            <a th:href="@{/admin/usuarios}"           class="nav-link">Usuarios</a>
+            <a th:href="@{/admin/practicas}"          class="nav-link">Prácticas</a>
+            <a th:href="@{/admin/empresas}"           class="nav-link">Empresas</a>
+            <div class="nav-dropdown">
+                <span class="nav-link nav-dropdown-toggle">Documentación ▾</span>
+                <div class="nav-dropdown-menu">
+                    <div class="nav-dropdown-menu-inner">
+                        <a th:href="@{/web/documentos/admin/listado}" class="nav-dropdown-item">Gestión</a>
+                        <a th:href="@{/web/documentos/admin}"         class="nav-dropdown-item">Validación</a>
+                    </div>
+                </div>
+            </div>
             <a th:href="@{/web/informes/seleccion}" class="nav-link nav-link-active">Informes</a>
         </th:block>
 
         <th:block th:if="${rol == 'COORDINADOR'}">
-            <a href="#" class="nav-link">Alumnos</a>
-            <a href="#" class="nav-link">Seguimiento</a>
-            <a th:href="@{/web/coordinador/validarHoras}" class="nav-link">Validar horas</a>
-            <a href="#" class="nav-link">Evaluaciones</a>
-            <a th:href="@{/web/informes/seleccion}" class="nav-link nav-link-active">Informes</a>
+            <a th:href="@{/web/inicioCoordinador}"              class="nav-link">Inicio</a>
+            <a th:href="@{/web/coordinador/validarHoras}"       class="nav-link">Validar horas</a>
+            <a th:href="@{/web/documentos/coordinador/listado}" class="nav-link">Documentación</a>
+            <a th:href="@{/web/informes/seleccion}"             class="nav-link nav-link-active">Informes</a>
         </th:block>
 
         <a th:href="@{/web/logout}" class="btn-logout">Cerrar sesión</a>
@@ -38,7 +46,19 @@
 <div th:class="${rol == 'ADMINISTRACION'} ? 'container-administracion' : 'container-coordinador'">
 
     <div class="informes-header">
-        <h1 class="informes-title">Generar informes</h1>
+        <div style="display:flex; align-items:center; gap:1.5rem; margin-bottom:0.4rem;">
+            <a th:href="${rol == 'ADMINISTRACION'} ? '/web/inicioAdministracion' : '/web/inicioCoordinador'"
+               class="btn-volver"
+               style="color: var(--color-admin-primario); text-decoration:none; font-weight:600;
+                  font-size:14px; display:inline-flex; align-items:center; gap:6px; white-space:nowrap;">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                Volver
+            </a>
+            <h1 class="informes-title" style="margin-bottom:0;">Generar informes</h1>
+        </div>
         <p class="informes-subtitle">Selecciona el tipo de informe y aplica los filtros que necesites antes de generarlo.</p>
     </div>
 
