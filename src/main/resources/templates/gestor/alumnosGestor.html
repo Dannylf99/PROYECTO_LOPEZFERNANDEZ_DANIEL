@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="es">
+<head>
+    <meta charset="UTF-8">
+    <title>Mis alumnos | Gestion@</title>
+    <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
+    <link rel="stylesheet" th:href="@{/css/gestor.css}">
+    <link rel="stylesheet" th:href="@{/css/gestion-usuarios.css}">
+    <style>
+        .users-table thead {
+            background: linear-gradient(135deg, #e74c3c 0%, #ec7063 100%);
+        }
+        .users-table thead th {
+            cursor: pointer;
+            user-select: none;
+        }
+        .users-table thead th:hover { opacity: 0.85; }
+        .sort-icon { margin-left: 5px; font-size: 11px; opacity: 0.7; }
+
+        .badge-activa     { background: #e8f8f0; color: #1a7a45; }
+        .badge-preparada  { background: #fff4ec; color: #e67329; }
+        .badge-parada     { background: #f4ecf7; color: #7d3c98; }
+        .badge-finalizada { background: #eaf4fc; color: #1a6fa8; }
+        .badge-cancelada  { background: #fdf0f0; color: #c0392b; }
+        .badge-daw        { background: #e8f4fd; color: #1a6fa8; }
+        .badge-dam        { background: #e8f8f0; color: #1a7a45; }
+
+        .horas-bar-wrap {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            min-width: 140px;
+        }
+        .horas-bar {
+            flex: 1;
+            height: 8px;
+            background: #f0f0f0;
+            border-radius: 4px;
+            overflow: hidden;
+        }
+        .horas-bar-fill {
+            height: 100%;
+            background: linear-gradient(135deg, #e74c3c 0%, #ec7063 100%);
+            border-radius: 4px;
+        }
+        .horas-texto {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            white-space: nowrap;
+        }
+        .btn-volver {
+            color: var(--color-gestor-primario) !important;
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: gap 0.2s ease;
+        }
+        .btn-volver:hover { gap: 10px; }
+
+        /* Barra de búsqueda y filtros */
+        .filtros-bar {
+            background: white;
+            border-radius: 12px;
+            padding: 20px 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+            display: flex;
+            gap: 16px;
+            flex-wrap: wrap;
+            align-items: flex-end;
+        }
+        .filtro-item {
+            display: flex;
+            flex-direction: column;
+            gap: 6px;
+            flex: 1;
+            min-width: 160px;
+        }
+        .filtro-item label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: #aaa;
+            margin: 0;
+        }
+        .filtro-item input,
+        .filtro-item select {
+            padding: 9px 14px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            font-size: 14px;
+            font-family: inherit;
+            background: #fafafa;
+            transition: border-color 0.2s;
+        }
+        .filtro-item input:focus,
+        .filtro-item select:focus {
+            outline: none;
+            border-color: #e74c3c;
+        }
+        .btn-limpiar {
+            padding: 9px 20px;
+            border: 2px solid #eee;
+            border-radius: 8px;
+            background: white;
+            color: #888;
+            font-size: 14px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            align-self: flex-end;
+        }
+        .btn-limpiar:hover { border-color: #e74c3c; color: #e74c3c; }
+
+        .contador-resultados {
+            font-size: 13px;
+            color: #888;
+            margin-bottom: 12px;
+        }
+        .contador-resultados strong { color: #333; }
+    </style>
+</head>
+<body>
+<nav class="navbar-gestor">
+    <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
+    <div class="nav-menu">
+        <a th:href="@{/web/inicioGestor}"        class="nav-link">Inicio</a>
+        <a th:href="@{/web/gestor/alumnos}"      class="nav-link nav-link-active">Mis alumnos</a>
+        <a th:href="@{/web/gestor/validarHoras}" class="nav-link">Validar horas</a>
+        <a th:href="@{/web/documentos/gestor}"   class="nav-link">Documentación</a>
+        <a th:href="@{/web/logout}"              class="btn-logout">Cerrar sesión</a>
+    </div>
+</nav>
+
+<div class="container-gestor">
+
+    <div class="page-header">
+        <div>
+            <a th:href="@{/web/inicioGestor}" class="btn-volver">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                Volver
+            </a>
+            <h1 class="page-title">Mis alumnos en prácticas</h1>
+            <p class="page-subtitle">Alumnos con práctica activa asignados a tu empresa.</p>
+        </div>
+    </div>
+
+    <!-- Búsqueda y filtros -->
+    <div class="filtros-bar">
+        <div class="filtro-item" style="flex:2; min-width:220px;">
+            <label>Buscar</label>
+            <input type="text" id="busqueda"
+                   placeholder="Nombre, apellidos, DNI o email...">
+        </div>
+        <div class="filtro-item">
+            <label>Curso</label>
+            <select id="filtroCurso">
+                <option value="">Todos</option>
+                <option value="DAW">DAW</option>
+                <option value="DAM">DAM</option>
+            </select>
+        </div>
+        <div class="filtro-item">
+            <label>Horario</label>
+            <select id="filtroHorario">
+                <option value="">Todos</option>
+                <option value="MANANA">Mañana</option>
+                <option value="TARDE">Tarde</option>
+                <option value="DISTANCIA">Distancia</option>
+            </select>
+        </div>
+        <button class="btn-limpiar" onclick="limpiarFiltros()">Limpiar</button>
+    </div>
+
+    <p class="contador-resultados">
+        Mostrando <strong id="contadorVisible">0</strong> de
+        <strong id="contadorTotal">0</strong> alumnos
+    </p>
+
+    <div class="table-wrapper">
+        <table class="users-table" id="tablaAlumnos">
+            <thead>
+            <tr>
+                <th onclick="ordenarPor(0)" data-col="0">
+                    Alumno <span class="sort-icon" id="icon-0">↕</span>
+                </th>
+                <th onclick="ordenarPor(1)" data-col="1">
+                    DNI <span class="sort-icon" id="icon-1">↕</span>
+                </th>
+                <th>Curso</th>
+                <th>Horario</th>
+                <th>Estado práctica</th>
+                <th>Progreso horas</th>
+            </tr>
+            </thead>
+            <tbody id="cuerpoTabla">
+            <tr th:if="${#lists.isEmpty(practicas)}" class="fila-vacia-original">
+                <td colspan="6" class="empty-table">
+                    No hay alumnos con práctica activa en tu empresa en este momento.
+                </td>
+            </tr>
+            <tr th:each="p : ${practicas}"
+                th:attr="data-nombre=${p.alumno.apellidos + ' ' + p.alumno.nombre},
+                             data-dni=${p.alumno.dni},
+                             data-email=${p.alumno.email},
+                             data-curso=${p.alumno.curso != null ? p.alumno.curso.name() : ''},
+                             data-horario=${p.alumno.horario != null ? p.alumno.horario.name() : ''},
+                             data-horas=${p.horasHechas}">
+                <td>
+                    <strong th:text="${p.alumno.apellidos + ', ' + p.alumno.nombre}"></strong>
+                    <div style="font-size:12px; color:#888;"
+                         th:text="${p.alumno.email}"></div>
+                </td>
+                <td th:text="${p.alumno.dni}"></td>
+                <td>
+                        <span class="badge"
+                              th:classappend="${p.alumno.curso != null ? 'badge-' + p.alumno.curso.name().toLowerCase() : ''}"
+                              th:text="${p.alumno.curso != null ? p.alumno.curso.name() : '-'}">
+                        </span>
+                </td>
+                <td th:text="${p.alumno.horario != null ? p.alumno.horario.name() : '-'}"></td>
+                <td>
+                        <span class="badge"
+                              th:classappend="${'badge-' + p.estado.name().toLowerCase()}"
+                              th:text="${p.estado.name()}">
+                        </span>
+                </td>
+                <td>
+                    <div class="horas-bar-wrap">
+                        <div class="horas-bar">
+                            <div class="horas-bar-fill"
+                                 th:style="'width:' + (${p.horasTotales > 0 ? (p.horasHechas * 100 / p.horasTotales) : 0}) + '%'">
+                            </div>
+                        </div>
+                        <span class="horas-texto"
+                              th:text="${p.horasHechas} + ' / ' + ${p.horasTotales} + 'h'">
+                            </span>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        <div id="sinResultados" style="display:none; text-align:center; padding:40px;
+             color:#aaa; background:white; border-radius:0 0 12px 12px;">
+            No se encontraron alumnos con los filtros aplicados.
+        </div>
+    </div>
+
+</div>
+
+<script>
+    let ordenActual = { col: -1, asc: true };
+
+    const filas = () => Array.from(document.querySelectorAll('#cuerpoTabla tr:not(.fila-vacia-original)'));
+
+    function actualizar() {
+        const busq   = document.getElementById('busqueda').value.toLowerCase().trim();
+        const curso  = document.getElementById('filtroCurso').value;
+        const horario = document.getElementById('filtroHorario').value;
+
+        let visibles = 0;
+        filas().forEach(fila => {
+            const nombre  = (fila.dataset.nombre  || '').toLowerCase();
+            const dni     = (fila.dataset.dni     || '').toLowerCase();
+            const email   = (fila.dataset.email   || '').toLowerCase();
+            const filaCurso   = fila.dataset.curso   || '';
+            const filaHorario = fila.dataset.horario || '';
+
+            const coincideBusq   = !busq   || nombre.includes(busq) || dni.includes(busq) || email.includes(busq);
+            const coincideCurso  = !curso  || filaCurso === curso;
+            const coincideHorario = !horario || filaHorario === horario;
+
+            const mostrar = coincideBusq && coincideCurso && coincideHorario;
+            fila.style.display = mostrar ? '' : 'none';
+            if (mostrar) visibles++;
+        });
+
+        document.getElementById('contadorVisible').textContent = visibles;
+        document.getElementById('sinResultados').style.display = visibles === 0 ? 'block' : 'none';
+    }
+
+    function ordenarPor(col) {
+        const asc = ordenActual.col === col ? !ordenActual.asc : true;
+        ordenActual = { col, asc };
+
+        // Resetear iconos
+        document.querySelectorAll('.sort-icon').forEach(i => i.textContent = '↕');
+        document.getElementById('icon-' + col).textContent = asc ? '↑' : '↓';
+
+        const tbody = document.getElementById('cuerpoTabla');
+        const rows  = filas();
+
+        rows.sort((a, b) => {
+            let va = col === 0 ? (a.dataset.nombre || '') : (a.dataset.dni || '');
+            let vb = col === 0 ? (b.dataset.nombre || '') : (b.dataset.dni || '');
+            return asc ? va.localeCompare(vb, 'es') : vb.localeCompare(va, 'es');
+        });
+
+        rows.forEach(r => tbody.appendChild(r));
+        actualizar();
+    }
+
+    function limpiarFiltros() {
+        document.getElementById('busqueda').value    = '';
+        document.getElementById('filtroCurso').value = '';
+        document.getElementById('filtroHorario').value = '';
+        ordenActual = { col: -1, asc: true };
+        document.querySelectorAll('.sort-icon').forEach(i => i.textContent = '↕');
+        actualizar();
+    }
+
+    // Inicializar contadores y eventos
+    document.addEventListener('DOMContentLoaded', () => {
+        const total = filas().length;
+        document.getElementById('contadorTotal').textContent = total;
+        document.getElementById('contadorVisible').textContent = total;
+
+        document.getElementById('busqueda').addEventListener('input', actualizar);
+        document.getElementById('filtroCurso').addEventListener('change', actualizar);
+        document.getElementById('filtroHorario').addEventListener('change', actualizar);
+    });
+</script>
+
+</body>
+</html>

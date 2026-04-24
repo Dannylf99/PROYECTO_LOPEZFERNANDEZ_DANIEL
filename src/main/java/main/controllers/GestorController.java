@@ -47,4 +47,17 @@ public class GestorController {
 
         return "gestor/documentosGestor";
     }
+
+    @GetMapping("/alumnos")
+    public String listaAlumnos(HttpSession session, Model model) {
+        Object usuario = session.getAttribute("usuario");
+        if (!(usuario instanceof GestorRol)) return "redirect:/web/login";
+        GestorRol gestor = (GestorRol) usuario;
+
+        model.addAttribute("usuario", gestor);
+        model.addAttribute("practicas",
+                practicaRepository.findByEmpresaIdAndEstado(
+                        gestor.getIdEmpresa(), PracticaRol.Estado.ACTIVA));
+        return "gestor/alumnosGestor";
+    }
 }
