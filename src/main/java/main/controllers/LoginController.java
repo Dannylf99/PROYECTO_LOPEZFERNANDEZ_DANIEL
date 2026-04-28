@@ -104,7 +104,11 @@ public class LoginController {
         Object usuario = session.getAttribute("usuario");
         if (!(usuario instanceof CoordinadorRol)) return "redirect:/web/login";
         noCache(response);
-        model.addAttribute("usuario", usuario);
+        CoordinadorRol coordinador = (CoordinadorRol) usuario;
+        System.out.println(">>> COORDINADOR: " + coordinador);
+        System.out.println(">>> NOMBRE: " + coordinador.getNombre());
+        System.out.println(">>> APELLIDOS: " + coordinador.getApellidos());
+        model.addAttribute("usuario", coordinador);
         return "coordinador/inicioCoordinador";
     }
 

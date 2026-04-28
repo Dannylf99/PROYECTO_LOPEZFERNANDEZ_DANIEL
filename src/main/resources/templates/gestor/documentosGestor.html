@@ -42,10 +42,11 @@
 <nav class="navbar-gestor">
     <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
-        <a th:href="@{/web/inicioGestor}"      class="nav-link">Inicio</a>
+        <a th:href="@{/web/inicioGestor}"        class="nav-link">Inicio</a>
+        <a th:href="@{/web/gestor/alumnos}"      class="nav-link">Mis alumnos</a>
         <a th:href="@{/web/gestor/validarHoras}" class="nav-link">Validar horas</a>
-        <a th:href="@{/web/documentos/gestor}" class="nav-link nav-link-active">Documentación</a>
-        <a th:href="@{/web/logout}"            class="btn-logout">Cerrar sesión</a>
+        <a th:href="@{/web/documentos/gestor}"   class="nav-link">Documentación</a>
+        <a th:href="@{/web/logout}"              class="btn-logout">Cerrar sesión</a>
     </div>
 </nav>
 
