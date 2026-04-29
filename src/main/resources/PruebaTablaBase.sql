@@ -522,3 +522,7 @@ INSERT INTO notificacion (id_alumno, mensaje, fecha, leida, borrada) VALUES
 (38,'Se ha subido un nuevo documento de tipo INFORME SEGUIMIENTO a tu expediente.',                            '2026-01-15',FALSE,FALSE),
 (42,'Tu registro de horas del 04/09/2025 ha sido rechazado. Revisa los datos.',                                '2025-09-05',FALSE,FALSE),
 (44,'¡Tus prácticas en CloudBase Asturias S.L. han comenzado! Ya puedes empezar a registrar tus horas.',     '2025-09-01',FALSE,FALSE);
+
+-- Convenio pendiente de firma del gestor para Aaron Menéndez (práctica 37, empresa 1)
+INSERT INTO documento (id_usuario, id_practica, tipo, fecha_subida, estado, ruta_archivo)
+VALUES (37, 37, 'CONVENIO', '2026-04-29', 'PENDIENTE_FIRMA_GESTOR', 'documento_prueba.pdf');
