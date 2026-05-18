@@ -12,7 +12,7 @@
     <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
         <a th:href="@{/web/inicioCoordinador}"              class="nav-link">Inicio</a>
-        <a th:href="@{/web/coordinador/alumnos}"            class="nav-link">Alumnos</a>
+        <a th:href="@{/web/coordinador/alumnos}"            class="nav-link">Alumnado</a>
         <a th:href="@{/web/coordinador/validarHoras}"       class="nav-link">Validar horas</a>
         <a th:href="@{/web/documentos/coordinador/listado}" class="nav-link">Documentación</a>
         <a th:href="@{/web/informes/seleccion}"             class="nav-link">Informes</a>
@@ -25,9 +25,9 @@
 
         <div class="column-left">
             <div class="welcome-section">
-                <h1 class="welcome-title">Bienvenido, <span th:text="${usuario.nombre}">NOMBRE</span></h1>
+                <h1 class="welcome-title">Te damos la bienvenida, <span th:text="${usuario.nombre}">NOMBRE</span></h1>
                 <p class="welcome-text">
-                    Desde este panel puedes gestionar todo lo relacionado con tus alumnos en prácticas.
+                    Desde este panel puedes gestionar todo lo relacionado con tu alumnado en prácticas.
                     Consulta su progreso, valida sus horas, revisa su documentación y genera informes de seguimiento.
                 </p>
             </div>
@@ -44,8 +44,8 @@
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg>
                 </div>
-                <h3 class="card-title">Mis alumnos</h3>
-                <p class="card-description">Consulta y gestiona los alumnos asignados a tu coordinación, su empresa, curso y estado de prácticas. Accede al detalle de cada alumno para ver sus horas y documentos.</p>
+                <h3 class="card-title">Alumnado</h3>
+                <p class="card-description">Consulta y gestiona aquel alumnado asignado a tu coordinación, su empresa, curso y estado de prácticas. Accede al detalle de cada alumno para ver sus horas y documentos.</p>
                 <a th:href="@{/web/coordinador/alumnos}" class="card-button">Ver alumnos →</a>
             </div>
 
@@ -57,7 +57,7 @@
                     </svg>
                 </div>
                 <h3 class="card-title">Validar horas</h3>
-                <p class="card-description">Revisa y valida las horas registradas por tus alumnos en prácticas. Acepta o rechaza cada registro pendiente de validación.</p>
+                <p class="card-description">Revisa y valida las horas registradas por tus alumnado en prácticas. Acepta o rechaza cada registro pendiente de validación.</p>
                 <a th:href="@{/web/coordinador/validarHoras}" class="card-button">Validar →</a>
             </div>
 
@@ -71,7 +71,7 @@
                     </svg>
                 </div>
                 <h3 class="card-title">Documentación</h3>
-                <p class="card-description">Consulta los documentos subidos por tus alumnos y su estado en el proceso de validación. Descarga cualquier documento cuando lo necesites.</p>
+                <p class="card-description">Consulta los documentos subidos por tu alumnado y su estado en el proceso de validación. Descarga cualquier documento cuando lo necesites.</p>
                 <a th:href="@{/web/documentos/coordinador/listado}" class="card-button">Ver documentos →</a>
             </div>
 
@@ -86,7 +86,7 @@
                     </svg>
                 </div>
                 <h3 class="card-title">Generar informes</h3>
-                <p class="card-description">Genera informes en PDF filtrados por fecha, curso y estado de las prácticas de tus alumnos.</p>
+                <p class="card-description">Genera informes en PDF filtrados por fecha, curso y estado de las prácticas de tu alumnado.</p>
                 <a th:href="@{/web/informes/seleccion}" class="card-button">Generar →</a>
             </div>
 

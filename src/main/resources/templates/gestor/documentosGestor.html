@@ -43,7 +43,7 @@
     <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
         <a th:href="@{/web/inicioGestor}"        class="nav-link">Inicio</a>
-        <a th:href="@{/web/gestor/alumnos}"      class="nav-link">Mis alumnos</a>
+        <a th:href="@{/web/gestor/alumnos}"      class="nav-link">Alumnado</a>
         <a th:href="@{/web/gestor/validarHoras}" class="nav-link">Validar horas</a>
         <a th:href="@{/web/documentos/gestor}"   class="nav-link">Documentación</a>
         <a th:href="@{/web/logout}"              class="btn-logout">Cerrar sesión</a>
@@ -63,7 +63,7 @@
             </a>
             <h1 class="doc-title" style="margin-bottom:0;">Documentación</h1>
         </div>
-        <p class="doc-subtitle">Firma convenios y sube documentos de seguimiento y evaluación de tus alumnos.</p>
+        <p class="doc-subtitle">Firma convenios y sube documentos de seguimiento y evaluación de tus alumnado.</p>
     </div>
 
     <!-- SECCIÓN 1: Subir informe o evaluación -->
@@ -143,10 +143,10 @@
 
     <!-- SECCIÓN 3: Todos los documentos de sus alumnos -->
     <div class="doc-card">
-        <h2 class="doc-section-title">Documentos de mis alumnos</h2>
+        <h2 class="doc-section-title">Documentos de mi alumnado</h2>
 
         <div th:if="${#lists.isEmpty(todosDocumentos)}" class="doc-empty">
-            No hay documentos registrados para tus alumnos aún.
+            No hay documentos registrados para tu alumnado aún.
         </div>
 
         <div class="doc-table-wrap" th:unless="${#lists.isEmpty(todosDocumentos)}">

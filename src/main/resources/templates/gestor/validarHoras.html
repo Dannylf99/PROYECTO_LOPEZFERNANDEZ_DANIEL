@@ -7,10 +7,18 @@
     <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
     <link rel="stylesheet" th:href="@{/css/gestor.css}">
     <style>
+        .validar-wrapper {
+            min-height: calc(100vh - 70px);
+            background: rgba(231, 76, 60, 0.06);
+            padding: 40px 20px;
+        }
         .container-validar {
             max-width: 900px;
             margin: 0 auto;
-            padding: 40px 20px;
+            background: rgba(255, 255, 255, 0.93);
+            border-radius: 20px;
+            padding: 32px 36px;
+            box-shadow: 0 4px 24px rgba(231, 76, 60, 0.10);
         }
         .page-header {
             display: flex;
@@ -84,10 +92,11 @@
 
         .empty-state {
             text-align: center;
-            padding: 80px 20px;
+            padding: 60px 20px;
             color: #aaa;
-            background: white;
-            border-radius: 20px;
+            background: #fafafa;
+            border-radius: 14px;
+            border: 1px dashed #eee;
         }
         .empty-state p { font-size: 16px; margin-top: 16px; }
     </style>
@@ -97,71 +106,75 @@
     <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
         <a th:href="@{/web/inicioGestor}"        class="nav-link">Inicio</a>
-        <a th:href="@{/web/gestor/alumnos}"      class="nav-link">Mis alumnos</a>
+        <a th:href="@{/web/gestor/alumnos}"      class="nav-link">Alumnado</a>
         <a th:href="@{/web/gestor/validarHoras}" class="nav-link">Validar horas</a>
         <a th:href="@{/web/documentos/gestor}"   class="nav-link">Documentación</a>
         <a th:href="@{/web/logout}"              class="btn-logout">Cerrar sesión</a>
     </div>
 </nav>
 
-<div class="container-validar">
-    <div class="page-header">
-        <a th:href="@{/web/inicioGestor}" class="btn-volver">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"></polyline>
+<div class="validar-wrapper">
+    <div class="container-validar">
+
+        <div class="page-header">
+            <a th:href="@{/web/inicioGestor}" class="btn-volver">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                Volver
+            </a>
+            <h1 class="page-title">Horas pendientes de validación</h1>
+        </div>
+
+        <div th:if="${mensajeExito}" class="alert alert-success"
+             th:text="${mensajeExito}" style="margin-bottom:20px;"></div>
+        <div th:if="${mensajeError}" class="alert alert-error"
+             th:text="${mensajeError}" style="margin-bottom:20px;"></div>
+
+        <div th:if="${#lists.isEmpty(pendientes)}" class="empty-state">
+            <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="1.5">
+                <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
+                <polyline points="22 4 12 14.01 9 11.01"></polyline>
             </svg>
-            Volver
-        </a>
-        <h1 class="page-title">Horas pendientes de validación</h1>
-    </div>
+            <p>No hay horas pendientes de validación.</p>
+        </div>
 
-    <div th:if="${mensajeExito}" class="alert alert-success"
-         th:text="${mensajeExito}" style="margin-bottom:20px;"></div>
-    <div th:if="${mensajeError}" class="alert alert-error"
-         th:text="${mensajeError}" style="margin-bottom:20px;"></div>
-
-    <div th:if="${#lists.isEmpty(pendientes)}" class="empty-state">
-        <svg width="56" height="56" viewBox="0 0 24 24" fill="none" stroke="#ddd" stroke-width="1.5">
-            <path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"></path>
-            <polyline points="22 4 12 14.01 9 11.01"></polyline>
-        </svg>
-        <p>No hay horas pendientes de validación.</p>
-    </div>
-
-    <div th:each="registro : ${pendientes}" class="registro-card">
-        <div class="registro-info">
-            <div class="registro-alumno"
-                 th:text="${registro.practica.alumno.nombre + ' ' + registro.practica.alumno.apellidos}"></div>
-            <div class="registro-empresa" th:text="${registro.practica.empresa.nombre}"></div>
-            <div class="registro-detalle">
-                <div class="detalle-item">
-                    <span class="detalle-label">Fecha</span>
-                    <span class="detalle-valor" th:text="${registro.fecha}"></span>
-                </div>
-                <div class="detalle-item">
-                    <span class="detalle-label">Horario</span>
-                    <span class="detalle-valor"
-                          th:text="${registro.horaInicio + ' - ' + registro.horaFin}"></span>
-                </div>
-                <div class="detalle-item">
-                    <span class="detalle-label">Horas</span>
-                    <span class="detalle-valor horas" th:text="${registro.horas} + 'h'"></span>
+        <div th:each="registro : ${pendientes}" class="registro-card">
+            <div class="registro-info">
+                <div class="registro-alumno"
+                     th:text="${registro.practica.alumno.nombre + ' ' + registro.practica.alumno.apellidos}"></div>
+                <div class="registro-empresa" th:text="${registro.practica.empresa.nombre}"></div>
+                <div class="registro-detalle">
+                    <div class="detalle-item">
+                        <span class="detalle-label">Fecha</span>
+                        <span class="detalle-valor" th:text="${registro.fecha}"></span>
+                    </div>
+                    <div class="detalle-item">
+                        <span class="detalle-label">Horario</span>
+                        <span class="detalle-valor"
+                              th:text="${registro.horaInicio + ' - ' + registro.horaFin}"></span>
+                    </div>
+                    <div class="detalle-item">
+                        <span class="detalle-label">Horas</span>
+                        <span class="detalle-valor horas" th:text="${registro.horas} + 'h'"></span>
+                    </div>
                 </div>
             </div>
+            <div class="acciones">
+                <form th:action="@{/web/horas/validar/{id}(id=${registro.idRegistro})}" method="post">
+                    <input type="hidden" name="origen" value="gestor">
+                    <button type="submit" class="btn-validar">✓ Validar</button>
+                </form>
+                <form th:action="@{/web/horas/rechazar/{id}(id=${registro.idRegistro})}" method="post">
+                    <input type="hidden" name="origen" value="gestor">
+                    <button type="submit" class="btn-rechazar"
+                            onclick="return confirm('¿Seguro que quieres rechazar estas horas?')">
+                        ✕ Rechazar
+                    </button>
+                </form>
+            </div>
         </div>
-        <div class="acciones">
-            <form th:action="@{/web/horas/validar/{id}(id=${registro.idRegistro})}" method="post">
-                <input type="hidden" name="origen" value="gestor">
-                <button type="submit" class="btn-validar">✓ Validar</button>
-            </form>
-            <form th:action="@{/web/horas/rechazar/{id}(id=${registro.idRegistro})}" method="post">
-                <input type="hidden" name="origen" value="gestor">
-                <button type="submit" class="btn-rechazar"
-                        onclick="return confirm('¿Seguro que quieres rechazar estas horas?')">
-                    ✕ Rechazar
-                </button>
-            </form>
-        </div>
+
     </div>
 </div>
 </body>

@@ -7,7 +7,19 @@
     <link rel="stylesheet" th:href="@{/css/estilos-globales.css}">
     <link rel="stylesheet" th:href="@{/css/alumno.css}">
     <style>
-        .horas-container { max-width: 650px; margin: 0 auto; padding: 40px 20px; }
+        .horas-wrapper {
+            min-height: calc(100vh - 70px);
+            background: rgba(255, 140, 66, 0.06);
+            padding: 40px 20px;
+        }
+        .horas-container {
+            max-width: 650px;
+            margin: 0 auto;
+            background: rgba(255, 255, 255, 0.93);
+            border-radius: 20px;
+            padding: 32px 36px;
+            box-shadow: 0 4px 24px rgba(255, 140, 66, 0.10);
+        }
         .page-header { display: flex; align-items: center; gap: 16px; margin-bottom: 32px; }
         .btn-volver { display: inline-flex; align-items: center; gap: 6px; color: #ff8c42; font-size: 14px; font-weight: 600; text-decoration: none; transition: gap 0.2s; }
         .btn-volver:hover { gap: 10px; }
@@ -77,145 +89,147 @@
     </div>
 </nav>
 
-<div class="horas-container">
-    <div class="page-header">
-        <a th:href="@{/web/inicioAlumno}" class="btn-volver">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
-                 stroke="currentColor" stroke-width="2">
-                <polyline points="15 18 9 12 15 6"></polyline>
-            </svg>
-            Volver
-        </a>
-        <h1 class="page-title">Registrar horas</h1>
-    </div>
-
-    <!-- Mensajes de éxito / error del servidor -->
-    <div th:if="${mensajeExito}" class="alert alert-success"
-         th:text="${mensajeExito}" style="margin-bottom:20px;"></div>
-    <div th:if="${mensajeError}" class="alert alert-error"
-         th:text="${mensajeError}" style="margin-bottom:20px;"></div>
-
-    <!-- Aviso práctica parada -->
-    <div th:if="${practicaParada}" class="aviso-parada" style="margin-bottom:24px;">
-        <div class="icono">⏸️</div>
-        <h3>Tus prácticas están pausadas</h3>
-        <p>No puedes registrar horas mientras tus prácticas estén pausadas.<br>
-            Contacta con tu coordinador para más información.</p>
-    </div>
-
-    <!-- Sin prácticas activas y no parada -->
-    <div th:if="${!practicaParada and #lists.isEmpty(practicas)}"
-         style="text-align:center; color:#aaa; padding:60px 20px;
-                background:white; border-radius:20px;">
-        <p style="font-size:16px;">No tienes prácticas activas en este momento.</p>
-    </div>
-
-    <!-- Aviso 2 pendientes -->
-    <div th:if="${!practicaParada and !#lists.isEmpty(practicas) and registrosPendientes >= 2}"
-         class="aviso-pendientes">
-        <span class="icono-pend">⏳</span>
-        <div>
-            <strong>Límite de registros pendientes alcanzado</strong>
-            <p>Ya tienes 2 registros pendientes de validación. Espera a que tu gestor
-                los valide antes de añadir más.</p>
+<div class="horas-wrapper">
+    <div class="horas-container">
+        <div class="page-header">
+            <a th:href="@{/web/inicioAlumno}" class="btn-volver">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none"
+                     stroke="currentColor" stroke-width="2">
+                    <polyline points="15 18 9 12 15 6"></polyline>
+                </svg>
+                Volver
+            </a>
+            <h1 class="page-title">Registrar horas</h1>
         </div>
-    </div>
 
-    <!-- Formulario -->
-    <div th:if="${!practicaParada and !#lists.isEmpty(practicas)}" class="form-card">
-        <form th:action="@{/web/alumno/horas/registrar}" method="post">
+        <!-- Mensajes de éxito / error del servidor -->
+        <div th:if="${mensajeExito}" class="alert alert-success"
+             th:text="${mensajeExito}" style="margin-bottom:20px;"></div>
+        <div th:if="${mensajeError}" class="alert alert-error"
+             th:text="${mensajeError}" style="margin-bottom:20px;"></div>
 
-            <div class="form-group" th:if="${#lists.size(practicas) > 1}">
-                <label class="form-label">Práctica</label>
-                <select class="form-select" name="idPractica" required>
-                    <option th:each="p : ${practicas}"
-                            th:value="${p.idPractica}"
-                            th:text="${p.empresa.nombre}"></option>
-                </select>
+        <!-- Aviso práctica parada -->
+        <div th:if="${practicaParada}" class="aviso-parada" style="margin-bottom:24px;">
+            <div class="icono">⏸️</div>
+            <h3>Tus prácticas están pausadas</h3>
+            <p>No puedes registrar horas mientras tus prácticas estén pausadas.<br>
+                Contacta con tu coordinador para más información.</p>
+        </div>
+
+        <!-- Sin prácticas activas y no parada -->
+        <div th:if="${!practicaParada and #lists.isEmpty(practicas)}"
+             style="text-align:center; color:#aaa; padding:60px 20px;
+                background:white; border-radius:20px;">
+            <p style="font-size:16px;">No tienes prácticas activas en este momento.</p>
+        </div>
+
+        <!-- Aviso 2 pendientes -->
+        <div th:if="${!practicaParada and !#lists.isEmpty(practicas) and registrosPendientes >= 2}"
+             class="aviso-pendientes">
+            <span class="icono-pend">⏳</span>
+            <div>
+                <strong>Límite de registros pendientes alcanzado</strong>
+                <p>Ya tienes 2 registros pendientes de validación. Espera a que tu gestor
+                    los valide antes de añadir más.</p>
             </div>
-            <input th:if="${#lists.size(practicas) == 1}"
-                   type="hidden" name="idPractica"
-                   th:value="${practicas[0].idPractica}">
+        </div>
 
-            <div class="form-group">
-                <label class="form-label">Fecha</label>
-                <input type="date" class="form-input" name="fecha" id="fecha"
-                       required onchange="calcularHoras()">
-            </div>
+        <!-- Formulario -->
+        <div th:if="${!practicaParada and !#lists.isEmpty(practicas)}" class="form-card">
+            <form th:action="@{/web/alumno/horas/registrar}" method="post">
 
-            <div class="form-row">
+                <div class="form-group" th:if="${#lists.size(practicas) > 1}">
+                    <label class="form-label">Práctica</label>
+                    <select class="form-select" name="idPractica" required>
+                        <option th:each="p : ${practicas}"
+                                th:value="${p.idPractica}"
+                                th:text="${p.empresa.nombre}"></option>
+                    </select>
+                </div>
+                <input th:if="${#lists.size(practicas) == 1}"
+                       type="hidden" name="idPractica"
+                       th:value="${practicas[0].idPractica}">
+
                 <div class="form-group">
-                    <label class="form-label">Hora de entrada</label>
-                    <input type="time" class="form-input" name="horaInicio" id="horaInicio"
+                    <label class="form-label">Fecha</label>
+                    <input type="date" class="form-input" name="fecha" id="fecha"
                            required onchange="calcularHoras()">
                 </div>
-                <div class="form-group">
-                    <label class="form-label">Hora de salida</label>
-                    <input type="time" class="form-input" name="horaFin" id="horaFin"
-                           required onchange="calcularHoras()">
-                </div>
-            </div>
 
-            <!-- Pausa opcional -->
-            <div class="pausa-section">
-                <label class="pausa-toggle">
-                    <input type="checkbox" id="tienePausa" onchange="togglePausa()">
-                    ¿Has tenido una pausa? (ej: hora de comer)
-                </label>
-                <div class="pausa-campos" id="pausaCampos">
-                    <div class="form-row" style="margin-top:0;">
-                        <div class="form-group">
-                            <label class="form-label">Inicio de la pausa</label>
-                            <input type="time" class="form-input" name="pausaInicio"
-                                   id="pausaInicio" onchange="calcularHoras()">
-                        </div>
-                        <div class="form-group">
-                            <label class="form-label">Fin de la pausa</label>
-                            <input type="time" class="form-input" name="pausaFin"
-                                   id="pausaFin" onchange="calcularHoras()">
+                <div class="form-row">
+                    <div class="form-group">
+                        <label class="form-label">Hora de entrada</label>
+                        <input type="time" class="form-input" name="horaInicio" id="horaInicio"
+                               required onchange="calcularHoras()">
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Hora de salida</label>
+                        <input type="time" class="form-input" name="horaFin" id="horaFin"
+                               required onchange="calcularHoras()">
+                    </div>
+                </div>
+
+                <!-- Pausa opcional -->
+                <div class="pausa-section">
+                    <label class="pausa-toggle">
+                        <input type="checkbox" id="tienePausa" onchange="togglePausa()">
+                        ¿Has tenido una pausa? (ej: hora de comer)
+                    </label>
+                    <div class="pausa-campos" id="pausaCampos">
+                        <div class="form-row" style="margin-top:0;">
+                            <div class="form-group">
+                                <label class="form-label">Inicio de la pausa</label>
+                                <input type="time" class="form-input" name="pausaInicio"
+                                       id="pausaInicio" onchange="calcularHoras()">
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Fin de la pausa</label>
+                                <input type="time" class="form-input" name="pausaFin"
+                                       id="pausaFin" onchange="calcularHoras()">
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <div class="horas-calculadas" id="horasCalculadas" style="display:none;">
-                <div class="numero" id="horasNumero">0</div>
-                <div class="texto">
-                    <strong id="horasTexto">0 horas a registrar</strong>
-                    Se enviarán pendientes de validación
+                <div class="horas-calculadas" id="horasCalculadas" style="display:none;">
+                    <div class="numero" id="horasNumero">0</div>
+                    <div class="texto">
+                        <strong id="horasTexto">0 horas a registrar</strong>
+                        Se enviarán pendientes de validación
+                    </div>
+                </div>
+
+                <div class="error-cliente" id="errorCliente"></div>
+
+                <button type="submit" class="btn-registrar" id="btnRegistrar" disabled>
+                    Enviar para validación
+                </button>
+            </form>
+        </div>
+
+        <!-- Historial -->
+        <h2 class="historial-title">Historial de registros</h2>
+        <div th:if="${#lists.isEmpty(registros)}" class="sin-registros">
+            No hay registros de horas aún.
+        </div>
+        <div th:each="registro : ${registros}" class="registro-item">
+            <div class="registro-left">
+                <div class="registro-fecha" th:text="${registro.fecha}"></div>
+                <div class="registro-horario">
+                    <span th:text="${registro.horaInicio + ' — ' + registro.horaFin}"></span>
+                    <span th:if="${registro.pausaInicio != null}"
+                          th:text="' · Pausa: ' + ${registro.pausaInicio} + '-' + ${registro.pausaFin}"
+                          style="color:#bbb; font-size:12px;"></span>
+                    <span th:text="' · ' + ${registro.practica.empresa.nombre}"
+                          style="color:#aaa;"></span>
                 </div>
             </div>
-
-            <div class="error-cliente" id="errorCliente"></div>
-
-            <button type="submit" class="btn-registrar" id="btnRegistrar" disabled>
-                Enviar para validación
-            </button>
-        </form>
-    </div>
-
-    <!-- Historial -->
-    <h2 class="historial-title">Historial de registros</h2>
-    <div th:if="${#lists.isEmpty(registros)}" class="sin-registros">
-        No hay registros de horas aún.
-    </div>
-    <div th:each="registro : ${registros}" class="registro-item">
-        <div class="registro-left">
-            <div class="registro-fecha" th:text="${registro.fecha}"></div>
-            <div class="registro-horario">
-                <span th:text="${registro.horaInicio + ' — ' + registro.horaFin}"></span>
-                <span th:if="${registro.pausaInicio != null}"
-                      th:text="' · Pausa: ' + ${registro.pausaInicio} + '-' + ${registro.pausaFin}"
-                      style="color:#bbb; font-size:12px;"></span>
-                <span th:text="' · ' + ${registro.practica.empresa.nombre}"
-                      style="color:#aaa;"></span>
+            <div class="registro-right">
+                <span class="registro-horas" th:text="${registro.horas} + 'h'"></span>
+                <span class="estado-badge"
+                      th:classappend="'estado-' + ${#strings.toLowerCase(registro.estado.name())}"
+                      th:text="${registro.estado}"></span>
             </div>
-        </div>
-        <div class="registro-right">
-            <span class="registro-horas" th:text="${registro.horas} + 'h'"></span>
-            <span class="estado-badge"
-                  th:classappend="'estado-' + ${#strings.toLowerCase(registro.estado.name())}"
-                  th:text="${registro.estado}"></span>
         </div>
     </div>
 </div>

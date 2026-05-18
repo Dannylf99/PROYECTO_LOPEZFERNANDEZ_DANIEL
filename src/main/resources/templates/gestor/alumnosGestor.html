@@ -130,7 +130,7 @@
     <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
         <a th:href="@{/web/inicioGestor}"        class="nav-link">Inicio</a>
-        <a th:href="@{/web/gestor/alumnos}"      class="nav-link">Mis alumnos</a>
+        <a th:href="@{/web/gestor/alumnos}"      class="nav-link">Alumnado</a>
         <a th:href="@{/web/gestor/validarHoras}" class="nav-link">Validar horas</a>
         <a th:href="@{/web/documentos/gestor}"   class="nav-link">Documentación</a>
         <a th:href="@{/web/logout}"              class="btn-logout">Cerrar sesión</a>
@@ -148,8 +148,8 @@
                 </svg>
                 Volver
             </a>
-            <h1 class="page-title">Mis alumnos en prácticas</h1>
-            <p class="page-subtitle">Alumnos con práctica activa asignados a tu empresa.</p>
+            <h1 class="page-title">Alumnado en prácticas</h1>
+            <p class="page-subtitle">Alumnado con práctica activa asignados a tu empresa.</p>
         </div>
     </div>
 
@@ -204,7 +204,7 @@
             <tbody id="cuerpoTabla">
             <tr th:if="${#lists.isEmpty(practicas)}" class="fila-vacia-original">
                 <td colspan="6" class="empty-table">
-                    No hay alumnos con práctica activa en tu empresa en este momento.
+                    No hay alumnado con prácticas activas en tu empresa en este momento.
                 </td>
             </tr>
             <tr th:each="p : ${practicas}"
@@ -250,7 +250,7 @@
         </table>
         <div id="sinResultados" style="display:none; text-align:center; padding:40px;
              color:#aaa; background:white; border-radius:0 0 12px 12px;">
-            No se encontraron alumnos con los filtros aplicados.
+            No se ha encontrado alumnado con los filtros aplicados.
         </div>
     </div>
 

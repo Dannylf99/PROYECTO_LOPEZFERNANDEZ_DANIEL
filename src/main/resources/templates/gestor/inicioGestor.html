@@ -12,7 +12,7 @@
     <img th:src="@{/img/logo.png}" alt="Gestion@" class="logo-img">
     <div class="nav-menu">
         <a th:href="@{/web/inicioGestor}"        class="nav-link">Inicio</a>
-        <a th:href="@{/web/gestor/alumnos}"      class="nav-link">Mis alumnos</a>
+        <a th:href="@{/web/gestor/alumnos}"      class="nav-link">Alumnado</a>
         <a th:href="@{/web/gestor/validarHoras}" class="nav-link">Validar horas</a>
         <a th:href="@{/web/documentos/gestor}"   class="nav-link">Documentación</a>
         <a th:href="@{/web/logout}"              class="btn-logout">Cerrar sesión</a>
@@ -24,9 +24,9 @@
 
         <div class="column-left">
             <div class="welcome-section">
-                <h1 class="welcome-title">Bienvenido, <span th:text="${usuario.nombre}">NOMBRE</span></h1>
+                <h1 class="welcome-title">Te damos la bienvenida, <span th:text="${usuario.nombre}">NOMBRE</span></h1>
                 <p class="welcome-text">
-                    Desde este panel puedes gestionar todo lo relacionado con los alumnos en prácticas
+                    Desde este panel puedes gestionar todo lo relacionado con el alumnado en prácticas
                     de tu empresa. Consulta su progreso, valida sus horas, firma convenios y sube
                     los documentos de seguimiento y evaluación correspondientes.
                 </p>
@@ -44,9 +44,9 @@
                         <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
                     </svg>
                 </div>
-                <h3 class="card-title">Mis alumnos</h3>
-                <p class="card-description">Consulta los alumnos en prácticas activas asignados a tu empresa, su progreso de horas y sus datos principales.</p>
-                <a th:href="@{/web/gestor/alumnos}" class="card-button">Ver alumnos →</a>
+                <h3 class="card-title">Alumnado</h3>
+                <p class="card-description">Consulta al alumnado en prácticas activas asignados a tu empresa, su progreso de horas y sus datos principales.</p>
+                <a th:href="@{/web/gestor/alumnos}" class="card-button">Ver alumnado →</a>
             </div>
 
             <div class="action-card">
@@ -57,7 +57,7 @@
                     </svg>
                 </div>
                 <h3 class="card-title">Validar horas</h3>
-                <p class="card-description">Revisa y valida las horas registradas por los alumnos en prácticas en tu empresa. Acepta o rechaza cada registro.</p>
+                <p class="card-description">Revisa y valida las horas registradas por el alumnado en prácticas en tu empresa. Acepta o rechaza cada registro.</p>
                 <a th:href="@{/web/gestor/validarHoras}" class="card-button">Validar →</a>
             </div>
 
@@ -70,7 +70,7 @@
                     </svg>
                 </div>
                 <h3 class="card-title">Gestionar documentación</h3>
-                <p class="card-description">Firma convenios de tus alumnos, sube informes de seguimiento y evaluaciones al sistema de gestión documental.</p>
+                <p class="card-description">Firma convenios del alumnado, sube informes de seguimiento y evaluaciones al sistema de gestión documental.</p>
                 <a th:href="@{/web/documentos/gestor}" class="card-button">Gestionar →</a>
             </div>
 
